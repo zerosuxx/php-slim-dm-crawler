@@ -1,0 +1,36 @@
+version: '3'
+services:
+  mysql:
+    image: "mysql:5.7"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - ./config/environment/mysql:/var/lib/mysql
+      - ./config/environment/init_sql:/docker-entrypoint-initdb.d
+    networks:
+      app-net:
+        aliases:
+          - mysql
+  web:
+    image: "zerosuxx/php-dev:7.2.9-apache"
+    environment:
+      APPLICATION_ENV: "dev"
+    ports:
+      - '8080:80'
+    volumes:
+      - ./:/var/www/html
+      - ./config/environment/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - app-net
+  test:
+    image: "zerosuxx/php-dev:7.2.9-cli"
+    environment:
+      APPLICATION_ENV: "test"
+    volumes:
+      - .:/opt/project
+      - ./config/environment/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - app-net
+networks:
+  app-net:
+    external: true

@@ -1,0 +1,16 @@
+sudo: required
+language: php
+php:
+  - 7.2.9
+env:
+  - COMPOSE_VERSION: 1.8.0
+
+before_script:
+  - make init-test
+
+script:
+  - make phpunit
+  
+after_success:
+  - sed -i "s|/opt/project|$PWD|g" clover.xml
+  - travis_retry php vendor/bin/php-coveralls -v

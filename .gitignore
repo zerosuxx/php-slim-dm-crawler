@@ -1,0 +1,7 @@
+.idea/
+vendor/
+coverage/
+config/environment/mysql/
+.DS_Store
+.DS_Store?
+clover.xml
