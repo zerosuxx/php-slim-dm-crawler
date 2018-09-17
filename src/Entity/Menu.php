@@ -11,7 +11,7 @@ class Menu
     /**
      * @var string
      */
-    private $appetizer;
+    private $soup;
     /**
      * @var string
      */
@@ -22,12 +22,13 @@ class Menu
     private $price;
 
     /**
-     * @param string $appetizer
+     * @param string $soup
      * @param string $mainCourse
+     * @param int|null $price
      */
-    public function __construct(string $appetizer, string $mainCourse, int $price = null)
+    public function __construct(string $soup, string $mainCourse, int $price = null)
     {
-        $this->appetizer = $appetizer;
+        $this->soup = $soup;
         $this->mainCourse = $mainCourse;
         $this->price = $price;
     }
@@ -35,9 +36,9 @@ class Menu
     /**
      * @return string
      */
-    public function getAppetizer(): string
+    public function getSoup(): string
     {
-        return $this->appetizer;
+        return $this->soup;
     }
 
     /**

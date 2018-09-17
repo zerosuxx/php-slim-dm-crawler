@@ -10,10 +10,10 @@ class MenuTest extends TestCase
     /**
      * @test
      */
-    public function getAppetizer_ReturnsAppetizer()
+    public function getSoup_ReturnsSoup()
     {
         $menu = new Menu('Meal soup', '');
-        $this->assertEquals('Meal soup', $menu->getAppetizer());
+        $this->assertEquals('Meal soup', $menu->getSoup());
     }
 
     /**
