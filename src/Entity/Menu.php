@@ -20,6 +20,10 @@ class Menu
      * @var int
      */
     private $price;
+    /**
+     * @var string|null
+     */
+    private $dessert = null;
 
     /**
      * @param string $soup
@@ -55,5 +59,24 @@ class Menu
     public function getPrice(): ?int
     {
         return $this->price;
+    }
+
+    /**
+     * @param string $dessert
+     * @return self
+     */
+    public function withDessert(string $dessert)
+    {
+        $new = clone $this;
+        $new->dessert = $dessert;
+        return $new;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDessert(): ?string
+    {
+        return $this->dessert;
     }
 }
