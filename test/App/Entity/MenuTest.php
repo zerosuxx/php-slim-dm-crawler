@@ -28,18 +28,9 @@ class MenuTest extends TestCase
     /**
      * @test
      */
-    public function getDrink_ReturnsDrink()
+    public function getPrice_ReturnsPrice()
     {
-        $menu = new Menu('', '', 'Cola');
-        $this->assertEquals('Cola', $menu->getDrink());
-    }
-
-    /**
-     * @test
-     */
-    public function getDessert_ReturnsDessert()
-    {
-        $menu = new Menu('', '', '', 'Cheese cake');
-        $this->assertEquals('Cheese cake', $menu->getDessert());
+        $menu = new Menu('', '', 1000);
+        $this->assertEquals(1000, $menu->getPrice());
     }
 }
