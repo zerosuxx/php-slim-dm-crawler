@@ -24,8 +24,9 @@ class BonnieCrawlerTest extends TestCase
         $menu = $this->createBonnieCrawler()->getDailyMenu(new \DateTime('2018-09-17'));
 
         $this->assertInstanceOf(Menu::class, $menu);
-        $this->assertEquals('Zöldbableves', $menu->getAppetizer());
+        $this->assertEquals('Zöldbableves', $menu->getSoup());
         $this->assertEquals('Rántott csirkemell salátával', $menu->getMainCourse());
+        $this->assertEquals(1350, $menu->getPrice());
     }
 
     /**

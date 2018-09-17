@@ -43,10 +43,15 @@ class BonnieCrawler
         if(!$dailyMenu->count()) {
             throw new \InvalidArgumentException('Daily menu not found for this date');
         }
-        $appetizer = $dailyMenu->filter('tr:nth-child(2) td:nth-child(3)');
-        $mainCourse= $dailyMenu->filter('tr:nth-child(3) td:nth-child(3)');
 
-        return new Menu(trim($appetizer->text()), trim($mainCourse->text()));
+        $appetizer = trim($dailyMenu->filter('tr:nth-child(2) td:nth-child(3)')->text());
+        $mainCourse= trim($dailyMenu->filter('tr:nth-child(3) td:nth-child(3)')->text());
+
+        $title = $this->domCrawler->filter('h2')->text();
+        preg_match('/([0-9]+)/', $title, $titleMatches);
+        $price = (int)$titleMatches[1];
+
+        return new Menu($appetizer, $mainCourse, $price);
     }
 
 
