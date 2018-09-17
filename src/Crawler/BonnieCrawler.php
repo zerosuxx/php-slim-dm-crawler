@@ -40,11 +40,13 @@ class BonnieCrawler
         $this->domCrawler->addHtmlContent((string)$response->getBody());
 
         $dailyMenu = $this->domCrawler->filter('#left_column table')->eq($dayNum-1);
+        if(!$dailyMenu->count()) {
+            throw new \InvalidArgumentException('Daily menu not found for this date');
+        }
         $appetizer = $dailyMenu->filter('tr:nth-child(2) td:nth-child(3)');
         $mainCourse= $dailyMenu->filter('tr:nth-child(3) td:nth-child(3)');
 
         return new Menu(trim($appetizer->text()), trim($mainCourse->text()));
-
     }
 
 

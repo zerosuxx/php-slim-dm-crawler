@@ -30,6 +30,17 @@ class BonnieCrawlerTest extends TestCase
         $this->assertEquals('Rántott csirkemell salátával', $menu->getMainCourse());
     }
 
+    /**
+     * @test
+     */
+    public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $file = __DIR__ . '/../assets/bonnie_daily_menu_18_09_17-21.html';
+        $crawler = new BonnieCrawler($this->createClientMock(file_get_contents($file)), new Crawler());
+        $crawler->getDailyMenu(new \DateTime('2018-09-22'));
+    }
+
     private function createClientMock(string $contents) {
         $bodyMock = $this->createMock(StreamInterface::class);
         $bodyMock
