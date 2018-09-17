@@ -2,6 +2,7 @@
 
 namespace App\DailyMenu;
 
+use PDO;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 
