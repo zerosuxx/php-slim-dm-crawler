@@ -2,11 +2,12 @@
 
 namespace Test\App\Entity;
 
-use App\Entity\Menu;
+use App\DailyMenu\Entity\Menu;
 use PHPUnit\Framework\TestCase;
 
 class MenuTest extends TestCase
 {
+
     /**
      * @test
      */
@@ -23,5 +24,14 @@ class MenuTest extends TestCase
     {
         $menu = new Menu('', 1000);
         $this->assertEquals(1000, $menu->getPrice());
+    }
+
+    /**
+     * @test
+     */
+    public function getRestaurantId_ReturnsRestaurantId()
+    {
+        $menu = new Menu('', null, 1);
+        $this->assertEquals(1, $menu->getRestaurantId());
     }
 }

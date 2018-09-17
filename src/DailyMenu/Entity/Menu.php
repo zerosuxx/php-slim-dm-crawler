@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\DailyMenu\Entity;
 
 /**
  * Class Menu
- * @package App\Entity
+ * @package App\DailyMenu\Entity
  */
 class Menu
 {
@@ -16,15 +16,21 @@ class Menu
      * @var int|null
      */
     private $price;
+    /**
+     * @var int
+     */
+    private $restaurantId;
 
     /**
      * @param string $foods
      * @param int|null $price [optional]
+     * @param int|null $restaurantId
      */
-    public function __construct(string $foods, int $price = null)
+    public function __construct(string $foods, int $price = null, int $restaurantId = null)
     {
         $this->foods = $foods;
         $this->price = $price;
+        $this->restaurantId = $restaurantId;
     }
 
     /**
@@ -41,5 +47,13 @@ class Menu
     public function getPrice(): ?int
     {
         return $this->price;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRestaurantId(): int
+    {
+        return $this->restaurantId;
     }
 }
