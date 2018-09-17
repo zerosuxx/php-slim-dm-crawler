@@ -21,9 +21,7 @@ class BonnieCrawlerTest extends TestCase
      */
     public function getDailyMenu_GivenTodayDateTimeParameter_ReturnsCurrentDailyMenu()
     {
-        $file = __DIR__ . '/../assets/bonnie_daily_menu_18_09_17-21.html';
-        $crawler = new BonnieCrawler($this->createClientMock(file_get_contents($file)), new Crawler());
-        $menu = $crawler->getDailyMenu(new \DateTime('2018-09-17'));
+        $menu = $this->createBonnieCrawler()->getDailyMenu(new \DateTime('2018-09-17'));
 
         $this->assertInstanceOf(Menu::class, $menu);
         $this->assertEquals('Zöldbableves', $menu->getAppetizer());
@@ -36,17 +34,20 @@ class BonnieCrawlerTest extends TestCase
     public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $file = __DIR__ . '/../assets/bonnie_daily_menu_18_09_17-21.html';
-        $crawler = new BonnieCrawler($this->createClientMock(file_get_contents($file)), new Crawler());
-        $crawler->getDailyMenu(new \DateTime('2018-09-22'));
+        $this->createBonnieCrawler()->getDailyMenu(new \DateTime('2018-09-22'));
     }
 
-    private function createClientMock(string $contents) {
+    private function createBonnieCrawler() {
+        $file = __DIR__ . '/../assets/bonnie_daily_menu_18_09_17-21.html';
+        return new BonnieCrawler($this->createClientMock($file), new Crawler());
+    }
+
+    private function createClientMock(string $file) {
         $bodyMock = $this->createMock(StreamInterface::class);
         $bodyMock
             ->expects($this->once())
             ->method('__toString')
-            ->willReturn($contents);
+            ->willReturn(file_get_contents($file));
 
         $responseMock = $this->createMock(ResponseInterface::class);
 
