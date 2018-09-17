@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateDailyMenusTable extends AbstractMigration
+class CreateMenusTable extends AbstractMigration
 {
     /**
      * Change Method.
