@@ -28,12 +28,11 @@ class Menu
     /**
      * @param string $appetizer
      * @param string $mainCourse
-     * @param string $drink
-     * @param string $dessert
+     * @param string $drink [optional]
+     * @param string $dessert [optional]
      */
     public function __construct(string $appetizer, string $mainCourse, string $drink = '', string $dessert = '')
     {
-
         $this->appetizer = $appetizer;
         $this->mainCourse = $mainCourse;
         $this->drink = $drink;
