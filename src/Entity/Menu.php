@@ -11,46 +11,28 @@ class Menu
     /**
      * @var string
      */
-    private $soup;
+    private $foods;
     /**
-     * @var string
-     */
-    private $mainCourse;
-    /**
-     * @var int
+     * @var int|null
      */
     private $price;
-    /**
-     * @var string|null
-     */
-    private $dessert = null;
 
     /**
-     * @param string $soup
-     * @param string $mainCourse
-     * @param int|null $price
+     * @param string $foods
+     * @param int|null $price [optional]
      */
-    public function __construct(string $soup, string $mainCourse, int $price = null)
+    public function __construct(string $foods, int $price = null)
     {
-        $this->soup = $soup;
-        $this->mainCourse = $mainCourse;
+        $this->foods = $foods;
         $this->price = $price;
     }
 
     /**
      * @return string
      */
-    public function getSoup(): string
+    public function getFoods(): string
     {
-        return $this->soup;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMainCourse(): string
-    {
-        return $this->mainCourse;
+        return $this->foods;
     }
 
     /**
@@ -59,24 +41,5 @@ class Menu
     public function getPrice(): ?int
     {
         return $this->price;
-    }
-
-    /**
-     * @param string $dessert
-     * @return self
-     */
-    public function withDessert(string $dessert)
-    {
-        $new = clone $this;
-        $new->dessert = $dessert;
-        return $new;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDessert(): ?string
-    {
-        return $this->dessert;
     }
 }

@@ -10,19 +10,10 @@ class MenuTest extends TestCase
     /**
      * @test
      */
-    public function getSoup_ReturnsSoup()
+    public function getFoods_ReturnsFoods()
     {
-        $menu = new Menu('Meal soup', '');
-        $this->assertEquals('Meal soup', $menu->getSoup());
-    }
-
-    /**
-     * @test
-     */
-    public function getMainCourse_ReturnsMainCourse()
-    {
-        $menu = new Menu('', 'Hamburger');
-        $this->assertEquals('Hamburger', $menu->getMainCourse());
+        $menu = new Menu('Hamburger, Cheese cake');
+        $this->assertEquals('Hamburger, Cheese cake', $menu->getFoods());
     }
 
     /**
@@ -30,16 +21,7 @@ class MenuTest extends TestCase
      */
     public function getPrice_ReturnsPrice()
     {
-        $menu = new Menu('', '', 1000);
+        $menu = new Menu('', 1000);
         $this->assertEquals(1000, $menu->getPrice());
-    }
-
-    /**
-     * @test
-     */
-    public function getDessert_ReturnsDessert()
-    {
-        $menu = new Menu('', '');
-        $this->assertEquals('Cheese cake', $menu->withDessert('Cheese cake')->getDessert());
     }
 }
