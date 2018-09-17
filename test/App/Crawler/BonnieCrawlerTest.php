@@ -38,7 +38,7 @@ class BonnieCrawlerTest extends TestCase
     }
 
     private function createBonnieCrawler() {
-        $file = __DIR__ . '/../assets/bonnie_daily_menu_18_09_17-21.html';
+        $file = __DIR__ . '/assets/bonnie_daily_menu_18_09_17-21.html';
         return new BonnieCrawler($this->createClientMock($file), new Crawler());
     }
 
