@@ -16,15 +16,22 @@ class Menu
      * @var string
      */
     private $mainCourse;
+    /**
+     * @var string
+     */
+    private $drink;
 
     /**
      * @param string $appetizer
+     * @param string $mainCourse
+     * @param string $drink
      */
-    public function __construct(string $appetizer, string $mainCourse)
+    public function __construct(string $appetizer, string $mainCourse, string $drink)
     {
 
         $this->appetizer = $appetizer;
         $this->mainCourse = $mainCourse;
+        $this->drink = $drink;
     }
 
     /**
@@ -41,5 +48,13 @@ class Menu
     public function getMainCourse(): string
     {
         return $this->mainCourse;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDrink(): string
+    {
+        return $this->drink;
     }
 }

@@ -12,7 +12,7 @@ class MenuTest extends TestCase
      */
     public function getAppetizer_ReturnsAppetizer()
     {
-        $menu = new Menu('Meal soup', '');
+        $menu = new Menu('Meal soup', '', '');
         $this->assertEquals('Meal soup', $menu->getAppetizer());
     }
 
@@ -21,7 +21,16 @@ class MenuTest extends TestCase
      */
     public function getMainCourse_ReturnsMainCourse()
     {
-        $menu = new Menu('', 'Hamburger');
+        $menu = new Menu('', 'Hamburger', '');
         $this->assertEquals('Hamburger', $menu->getMainCourse());
+    }
+
+    /**
+     * @test
+     */
+    public function getDrink_ReturnsDrink()
+    {
+        $menu = new Menu('', '', 'Cola');
+        $this->assertEquals('Cola', $menu->getDrink());
     }
 }
