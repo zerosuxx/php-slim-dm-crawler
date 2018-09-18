@@ -46,6 +46,14 @@ class Menu
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getDateInTimestamp(): string
+    {
+        return $this->date->format('Y-m-d H:i:s');
+    }
+
+    /**
      * @return array
      */
     public function getFoods(): array

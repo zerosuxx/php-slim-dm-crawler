@@ -21,6 +21,16 @@ class MenuTest extends TestCase
     /**
      * @test
      */
+    public function getDateInTimestamp_ReturnsDateInTimestamp()
+    {
+        $date = new \DateTime('2018-09-18 10:00:00');
+        $menu = new Menu($date, []);
+        $this->assertEquals('2018-09-18 10:00:00', $menu->getDateInTimestamp());
+    }
+
+    /**
+     * @test
+     */
     public function getFoods_ReturnsFoods()
     {
         $menu = new Menu(new \DateTime(), ['Hamburger', 'Cheese cake']);
