@@ -2,6 +2,9 @@
 
 namespace Test\App\Dao;
 
+use App\DailyMenu\Crawler\BonnieCrawler;
+use App\DailyMenu\Dao\RestaurantsDao;
+use App\DailyMenu\Entity\Restaurant;
 use Test\App\DailyMenuTestCase;
 
 class RestaurantsDaoTest extends DailyMenuTestCase
@@ -17,11 +20,12 @@ class RestaurantsDaoTest extends DailyMenuTestCase
         $pdo->query(
             'INSERT INTO restaurants (name, url) VALUES ("Bonnie", "http://bonnierestro.hu/hu/napimenu/")'
         );
-        $dao = new \App\DailyMenu\Dao\RestaurantsDao($pdo);
+        $dao = new RestaurantsDao($pdo, ['Bonnie' => BonnieCrawler::class]);
 
         $restaurant = $dao->getRestaurant('Bonnie');
-        $this->assertEquals(1, $restaurant['id']);
-        $this->assertEquals('Bonnie', $restaurant['name']);
-        $this->assertEquals('http://bonnierestro.hu/hu/napimenu/', $restaurant['url']);
+        $this->assertInstanceOf(Restaurant::class, $restaurant);
+        $this->assertEquals('Bonnie', $restaurant->getName());
+        $this->assertEquals('http://bonnierestro.hu/hu/napimenu/', $restaurant->getUrl());
+        $this->assertEquals(BonnieCrawler::class, $restaurant->getCrawlerClass());
     }
 }
