@@ -2,6 +2,7 @@
 
 namespace App\DailyMenu;
 
+use App\DailyMenu\Action\HealthCheckAction;
 use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Crawler\CrawlerFactory;
 use App\DailyMenu\Dao\MenusDao;
@@ -21,17 +22,24 @@ class ConfigProvider
 {
     public function __invoke(App $app)
     {
-        $this->loadDependencies($app->getContainer());
         $this->loadConfig($app->getContainer());
+        $this->loadRoutes($app);
+        $this->loadDependencies($app->getContainer());
     }
 
     public function loadConfig(ContainerInterface $container)
     {
+        $container['settings']['displayErrorDetails'] = (bool)getenv('DEBUG');
         $container['app_config'] = [
             'crawler_aliases' => [
                 'Bonnie' => BonnieCrawler::class
             ]
         ];
+    }
+
+    public function loadRoutes(App $app)
+    {
+        $app->get('/healthcheck', HealthCheckAction::class);
     }
 
     public function loadDependencies(ContainerInterface $container)
@@ -68,6 +76,9 @@ class ConfigProvider
                 $container->get(MenusDao::class),
                 $container->get(CrawlerFactory::class)
             );
+        };
+        $container[HealthCheckAction::class] = function (ContainerInterface $container) {
+            return new HealthCheckAction($container->get('pdo'));
         };
     }
 }
