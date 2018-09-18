@@ -2,19 +2,12 @@
 
 namespace Test\App\Crawler;
 
-use App\Crawler\BonnieCrawler;
-use App\Entity\Menu;
-use GuzzleHttp\Client;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use App\DailyMenu\Crawler\BonnieCrawler;
+use App\DailyMenu\Entity\Menu;
 use Symfony\Component\DomCrawler\Crawler;
+use Test\App\DailyMenuTestCase;
 
-/**
- * Class BonnieCrawlerTest
- * @package Test\App\Crawler
- */
-class BonnieCrawlerTest extends TestCase
+class BonnieCrawlerTest extends DailyMenuTestCase
 {
     /**
      * @test
@@ -24,8 +17,6 @@ class BonnieCrawlerTest extends TestCase
         $menu = $this->createBonnieCrawler()->getDailyMenu(new \DateTime('2018-09-17'));
 
         $this->assertInstanceOf(Menu::class, $menu);
-        $this->assertEquals('Zöldbableves', $menu->getSoup());
-        $this->assertEquals('Rántott csirkemell salátával', $menu->getMainCourse());
         $this->assertEquals(1350, $menu->getPrice());
     }
 
@@ -40,29 +31,10 @@ class BonnieCrawlerTest extends TestCase
 
     private function createBonnieCrawler() {
         $file = __DIR__ . '/assets/bonnie_daily_menu_18_09_17-21.html';
-        return new BonnieCrawler($this->createClientMock($file), new Crawler());
+        $url = 'http://bonnierestro.hu/hu/napimenu/';
+        $clientMock = $this->createClientMock($file, $url);
+        return new BonnieCrawler($clientMock, new Crawler());
     }
 
-    private function createClientMock(string $file) {
-        $bodyMock = $this->createMock(StreamInterface::class);
-        $bodyMock
-            ->expects($this->once())
-            ->method('__toString')
-            ->willReturn(file_get_contents($file));
 
-        $responseMock = $this->createMock(ResponseInterface::class);
-
-        $responseMock
-            ->expects($this->once())
-            ->method('getBody')
-            ->willReturn($bodyMock);
-
-
-        $clientMock = $this->createMock(Client::class);
-        $clientMock
-            ->expects($this->once())
-            ->method('request')
-            ->willReturn($responseMock);
-        return $clientMock;
-    }
 }
