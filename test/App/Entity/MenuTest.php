@@ -11,10 +11,20 @@ class MenuTest extends TestCase
     /**
      * @test
      */
+    public function getDate_ReturnsDate()
+    {
+        $date = new \DateTime();
+        $menu = new Menu($date, []);
+        $this->assertEquals($date, $menu->getDate());
+    }
+
+    /**
+     * @test
+     */
     public function getFoods_ReturnsFoods()
     {
-        $menu = new Menu('Hamburger, Cheese cake');
-        $this->assertEquals('Hamburger, Cheese cake', $menu->getFoods());
+        $menu = new Menu(new \DateTime(), ['Hamburger', 'Cheese cake']);
+        $this->assertEquals(['Hamburger', 'Cheese cake'], $menu->getFoods());
     }
 
     /**
@@ -22,7 +32,7 @@ class MenuTest extends TestCase
      */
     public function getPrice_ReturnsPrice()
     {
-        $menu = new Menu('', 1000);
+        $menu = new Menu(new \DateTime(), [], 1000);
         $this->assertEquals(1000, $menu->getPrice());
     }
 
@@ -31,7 +41,7 @@ class MenuTest extends TestCase
      */
     public function getRestaurantId_ReturnsRestaurantId()
     {
-        $menu = new Menu('', null, 1);
-        $this->assertEquals(1, $menu->getRestaurantId());
+        $menu = new Menu(new \DateTime(), []);
+        $this->assertEquals(1, $menu->withRestaurantId(1)->getRestaurantId());
     }
 }

@@ -9,6 +9,10 @@ namespace App\DailyMenu\Entity;
 class Menu
 {
     /**
+     * @var \DateTime
+     */
+    private $date;
+    /**
      * @var string
      */
     private $foods;
@@ -22,21 +26,29 @@ class Menu
     private $restaurantId;
 
     /**
-     * @param string $foods
+     * @param \DateTime $date
+     * @param array $foods
      * @param int|null $price [optional]
-     * @param int|null $restaurantId
      */
-    public function __construct(string $foods, int $price = null, int $restaurantId = null)
+    public function __construct(\DateTime $date, array $foods, int $price = null)
     {
+        $this->date = $date;
         $this->foods = $foods;
         $this->price = $price;
-        $this->restaurantId = $restaurantId;
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getFoods(): string
+    public function getDate(): \DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFoods(): array
     {
         return $this->foods;
     }
@@ -55,5 +67,16 @@ class Menu
     public function getRestaurantId(): int
     {
         return $this->restaurantId;
+    }
+
+    /**
+     * @param int $restaurantId
+     * @return self
+     */
+    public function withRestaurantId(int $restaurantId)
+    {
+        $new = clone $this;
+        $new->restaurantId = $restaurantId;
+        return $new;
     }
 }
