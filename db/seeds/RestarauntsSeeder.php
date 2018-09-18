@@ -21,7 +21,6 @@ class RestarauntsSeeder extends AbstractSeed
                 'url' => 'http://bonnierestro.hu/hu/napimenu/'
             ],
         ];
-        $this->execute('SET foreign_key_checks=0');
         $table = $this->table('restaurants');
         $table->truncate();
         $table
