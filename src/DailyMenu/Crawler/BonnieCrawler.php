@@ -7,7 +7,6 @@ use DateTime;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
-use Zero\Form\Filter\StringFilter;
 
 /**
  * Class BonnieCrawler
@@ -16,12 +15,14 @@ use Zero\Form\Filter\StringFilter;
 class BonnieCrawler extends AbstractCrawler
 {
 
+    const DEFAULT_URL = 'http://bonnierestro.hu/hu/napimenu/';
+
     /**
      * @param Client $client
      * @param Crawler $domCrawler
      * @param string $url [optional]
      */
-    public function __construct(Client $client, Crawler $domCrawler, $url = 'http://bonnierestro.hu/hu/napimenu/')
+    public function __construct(Client $client, Crawler $domCrawler, $url = self::DEFAULT_URL)
     {
         parent::__construct($client, $domCrawler, $url);
     }
@@ -35,9 +36,8 @@ class BonnieCrawler extends AbstractCrawler
             throw new InvalidArgumentException('Daily menu not found for this date');
         }
 
-        $stringFilter = new StringFilter();
-        $soup = $stringFilter->filter($dailyMenu->filter('tr:nth-child(2) td:nth-child(3)')->text());
-        $mainCourse = $stringFilter->filter($dailyMenu->filter('tr:nth-child(3) td:nth-child(3)')->text());
+        $soup = trim($dailyMenu->filter('tr:nth-child(2) td:nth-child(3)')->text());
+        $mainCourse = trim($dailyMenu->filter('tr:nth-child(3) td:nth-child(3)')->text());
 
         $title = $domCrawler->filter('h2')->text();
         preg_match('/([0-9]+)/', $title, $titleMatches);
