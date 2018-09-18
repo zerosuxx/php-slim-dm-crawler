@@ -2,6 +2,7 @@
 
 namespace App\DailyMenu;
 
+use App\DailyMenu\Action\DailyMenusAction;
 use App\DailyMenu\Action\HealthCheckAction;
 use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Crawler\CrawlerFactory;
@@ -12,6 +13,8 @@ use GuzzleHttp\Client;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Slim\App;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -40,6 +43,7 @@ class ConfigProvider
     public function loadRoutes(App $app)
     {
         $app->get('/healthcheck', HealthCheckAction::class);
+        $app->get('/menus', DailyMenusAction::class);
     }
 
     public function loadDependencies(ContainerInterface $container)
@@ -55,6 +59,16 @@ class ConfigProvider
         };
         $container['DomCrawler'] = function () {
             return new Crawler();
+        };
+        $container['Twig'] = function (ContainerInterface $container) {
+            $view = new Twig(__DIR__ . '/templates', [
+                'cache' => false
+            ]);
+
+            $router = $container->get('router');
+            $uri = $container->get('request')->getUri();
+            $view->addExtension(new TwigExtension($router, $uri));
+            return $view;
         };
         $container[CrawlerFactory::class] = function (ContainerInterface $container) {
             return new CrawlerFactory(
@@ -79,6 +93,9 @@ class ConfigProvider
         };
         $container[HealthCheckAction::class] = function (ContainerInterface $container) {
             return new HealthCheckAction($container->get('pdo'));
+        };
+        $container[DailyMenusAction::class] = function (ContainerInterface $container) {
+            return new DailyMenusAction($container->get(MenusDao::class), $container->get('Twig'));
         };
     }
 }
