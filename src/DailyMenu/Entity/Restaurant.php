@@ -20,15 +20,21 @@ class Restaurant
      * @var string|null
      */
     private $crawlerClass = null;
+    /**
+     * @var int|null
+     */
+    private $id;
 
     /**
      * @param string $name
      * @param string $url
+     * @param int|null $id
      */
-    public function __construct(string $name, string $url)
+    public function __construct(string $name, string $url, int $id = null)
     {
         $this->name = $name;
         $this->url = $url;
+        $this->id = $id;
     }
 
     /**
@@ -48,14 +54,11 @@ class Restaurant
     }
 
     /**
-     * @param string $class
-     * @return self
+     * @return int|null
      */
-    public function withCrawlerClass(string $class)
+    public function getId(): ?int
     {
-        $new = clone $this;
-        $new->crawlerClass = $class;
-        return $new;
+        return $this->id;
     }
 
     /**
@@ -64,5 +67,16 @@ class Restaurant
     public function getCrawlerClass(): ?string
     {
         return $this->crawlerClass;
+    }
+
+    /**
+     * @param string $class
+     * @return self
+     */
+    public function withCrawlerClass(string $class)
+    {
+        $new = clone $this;
+        $new->crawlerClass = $class;
+        return $new;
     }
 }

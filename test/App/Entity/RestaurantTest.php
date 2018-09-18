@@ -29,6 +29,15 @@ class RestaurantTest extends TestCase
     /**
      * @test
      */
+    public function getId_ReturnsId()
+    {
+        $restaurant = new Restaurant('', '', 1);
+        $this->assertEquals(1, $restaurant->getId());
+    }
+
+    /**
+     * @test
+     */
     public function getCrawlerClass_ReturnsCrawlerClass()
     {
         $restaurant = new Restaurant('', '');
