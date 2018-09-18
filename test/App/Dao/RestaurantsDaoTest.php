@@ -20,9 +20,8 @@ class RestaurantsDaoTest extends DailyMenuTestCase
         $this->pdo = $this->getPDO();
         $this->truncateTable('restaurants');
         $this->pdo->query(
-            'INSERT INTO restaurants (name, url) VALUES ("Bonnie", "http://bonnierestro.hu/hu/napimenu/")'
+            'INSERT INTO restaurants (name, url) VALUES ("Test", "http://test.test")'
         );
-
     }
 
     /**
@@ -30,13 +29,13 @@ class RestaurantsDaoTest extends DailyMenuTestCase
      */
     public function getRestaurant_ReturnsRestaurant()
     {
-        $dao = new RestaurantsDao($this->pdo, ['Bonnie' => BonnieCrawler::class]);
+        $dao = new RestaurantsDao($this->pdo, ['Test' => BonnieCrawler::class]);
 
-        $restaurant = $dao->getRestaurant('Bonnie');
+        $restaurant = $dao->getRestaurant('Test');
         $this->assertInstanceOf(Restaurant::class, $restaurant);
         $this->assertEquals(1, $restaurant->getId());
-        $this->assertEquals('Bonnie', $restaurant->getName());
-        $this->assertEquals('http://bonnierestro.hu/hu/napimenu/', $restaurant->getUrl());
+        $this->assertEquals('Test', $restaurant->getName());
+        $this->assertEquals('http://test.test', $restaurant->getUrl());
         $this->assertEquals(BonnieCrawler::class, $restaurant->getCrawlerClass());
     }
 
@@ -48,7 +47,7 @@ class RestaurantsDaoTest extends DailyMenuTestCase
         $this->expectException(\InvalidArgumentException::class);
         $dao = new RestaurantsDao($this->pdo, []);
 
-        $dao->getRestaurant('Bonnie');
+        $dao->getRestaurant('NotExists');
     }
 
     /**
@@ -56,12 +55,21 @@ class RestaurantsDaoTest extends DailyMenuTestCase
      */
     public function getRestaurants_ReturnsRestaurants()
     {
-        $dao = new RestaurantsDao($this->pdo, ['Bonnie' => BonnieCrawler::class]);
+        $this->pdo->query(
+            'INSERT INTO restaurants (name, url) VALUES ("Test2", "http://test.test")'
+        );
+        $dao = new RestaurantsDao($this->pdo, [
+            'Test' => BonnieCrawler::class,
+            'Test2' => BonnieCrawler::class
+        ]);
 
         $restaurants = $dao->getRestaurants();
-        $this->assertCount(1, $restaurants);
+        $this->assertCount(2, $restaurants);
         $this->assertEquals(1, $restaurants[0]->getId());
-        $this->assertEquals('Bonnie', $restaurants[0]->getName());
-        $this->assertEquals('http://bonnierestro.hu/hu/napimenu/', $restaurants[0]->getUrl());
+        $this->assertEquals('Test', $restaurants[0]->getName());
+        $this->assertEquals('http://test.test', $restaurants[0]->getUrl());
+        $this->assertEquals(2, $restaurants[1]->getId());
+        $this->assertEquals('Test2', $restaurants[1]->getName());
+        $this->assertEquals('http://test.test', $restaurants[1]->getUrl());
     }
 }
