@@ -26,4 +26,14 @@ class RestaurantTest extends TestCase
         $this->assertEquals('http://test.test', $restaurant->getUrl());
     }
 
+    /**
+     * @test
+     */
+    public function getCrawlerClass_ReturnsCrawlerClass()
+    {
+        $restaurant = new Restaurant('', '');
+        $this->assertEquals('TestClass', $restaurant->withCrawlerClass('TestClass')->getCrawlerClass());
+        $this->assertNull($restaurant->getCrawlerClass());
+    }
+
 }

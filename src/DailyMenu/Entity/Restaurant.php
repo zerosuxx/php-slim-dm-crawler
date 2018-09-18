@@ -16,6 +16,10 @@ class Restaurant
      * @var string
      */
     private $url;
+    /**
+     * @var string|null
+     */
+    private $crawlerClass = null;
 
     /**
      * @param string $name
@@ -41,5 +45,24 @@ class Restaurant
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    /**
+     * @param string $class
+     * @return self
+     */
+    public function withCrawlerClass(string $class)
+    {
+        $new = clone $this;
+        $new->crawlerClass = $class;
+        return $new;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCrawlerClass(): ?string
+    {
+        return $this->crawlerClass;
     }
 }
