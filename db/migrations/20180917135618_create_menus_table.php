@@ -35,9 +35,10 @@ class CreateMenusTable extends AbstractMigration
         $table = $this->table('menus');
         $table
             ->addColumn('restaurant_id', 'integer')
-            ->addForeignKey('restaurant_id', 'restaurants', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
-            ->addColumn('foods', 'string')
+            ->addColumn('foods', 'text')
             ->addColumn('price', 'integer')
+            ->addColumn('date', 'datetime')
+            ->addIndex(['date'])
             ->create();
     }
 }
