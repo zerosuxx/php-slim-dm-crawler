@@ -35,16 +35,49 @@ class RestaurantsDao
      * @return Restaurant
      */
     public function getRestaurant(string $name) {
-        $statement = $this->pdo->prepare('SELECT url FROM restaurants WHERE name = :name');
+        $crawlerAlias = $this->getCrawlerAlias($name);
+        $statement = $this->pdo->prepare('SELECT url, id FROM restaurants WHERE name = :name');
         $statement->execute(['name' => $name]);
         $restaurantData = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return $this->createRestaurant($name, $restaurantData['url'], $this->crawlerAliases[$name]);
+        return $this->createRestaurant($name, $restaurantData['url'], $restaurantData['id'], $crawlerAlias);
     }
 
-    private function createRestaurant($name, $url, $crawlerClass)
+    private function createRestaurant($name, $url, $id, $crawlerClass)
     {
-        $restaurant = new Restaurant($name, $url);
+        $restaurant = new Restaurant($name, $url, $id);
         return $restaurant->withCrawlerClass($crawlerClass);
+    }
+
+    /**
+     * @return Restaurant[]
+     */
+    public function getRestaurants()
+    {
+        $restaurants = [];
+        $statement = $this->pdo->prepare('SELECT name, url, id FROM restaurants');
+        $statement->execute();
+        while($restaurantData = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $name = $restaurantData['name'];
+            $restaurants[] = $this->createRestaurant(
+                $name,
+                $restaurantData['url'],
+                $restaurantData['id'],
+                $this->getCrawlerAlias($name)
+            );
+        }
+        return $restaurants;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    private function getCrawlerAlias(string $name) {
+        if(!isset($this->crawlerAliases[$name])) {
+            throw new \InvalidArgumentException('Crawler alias not found');
+        }
+        return $this->crawlerAliases[$name];
     }
 }
