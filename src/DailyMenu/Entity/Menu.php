@@ -21,9 +21,13 @@ class Menu
      */
     private $price;
     /**
-     * @var int
+     * @var int|null
      */
-    private $restaurantId;
+    private $restaurantId = null;
+    /**
+     * @var string|null
+     */
+    private $restaurantName = null;
 
     /**
      * @param \DateTime $date
@@ -72,7 +76,7 @@ class Menu
     /**
      * @return int
      */
-    public function getRestaurantId(): int
+    public function getRestaurantId(): ?int
     {
         return $this->restaurantId;
     }
@@ -86,5 +90,24 @@ class Menu
         $new = clone $this;
         $new->restaurantId = $restaurantId;
         return $new;
+    }
+
+    /**
+     * @param string $restaurantName
+     * @return self
+     */
+    public function withRestaurantName(string $restaurantName)
+    {
+        $new = clone $this;
+        $new->restaurantName = $restaurantName;
+        return $new;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRestaurantName(): ?string
+    {
+        return $this->restaurantName;
     }
 }

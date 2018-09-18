@@ -54,4 +54,13 @@ class MenuTest extends TestCase
         $menu = new Menu(new \DateTime(), []);
         $this->assertEquals(1, $menu->withRestaurantId(1)->getRestaurantId());
     }
+
+    /**
+     * @test
+     */
+    public function getRestaurantName_ReturnsRestaurantName()
+    {
+        $menu = new Menu(new \DateTime(), []);
+        $this->assertEquals('test', $menu->withRestaurantName('test')->getRestaurantName());
+    }
 }
