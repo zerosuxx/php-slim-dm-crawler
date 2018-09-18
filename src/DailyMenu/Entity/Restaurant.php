@@ -12,13 +12,19 @@ class Restaurant
      * @var string
      */
     private $name;
+    /**
+     * @var string
+     */
+    private $url;
 
     /**
      * @param string $name
+     * @param string $url
      */
-    public function __construct(string $name)
+    public function __construct(string $name, string $url)
     {
         $this->name = $name;
+        $this->url = $url;
     }
 
     /**
@@ -27,5 +33,13 @@ class Restaurant
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 }

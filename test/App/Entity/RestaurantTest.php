@@ -13,8 +13,17 @@ class RestaurantTest extends TestCase
      */
     public function getName_ReturnsName()
     {
-        $restaurant = new Restaurant('Test name');
+        $restaurant = new Restaurant('Test name', '');
         $this->assertEquals('Test name', $restaurant->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function getUrl_ReturnsUrl()
+    {
+        $restaurant = new Restaurant('', 'http://test.test');
+        $this->assertEquals('http://test.test', $restaurant->getUrl());
     }
 
 }
