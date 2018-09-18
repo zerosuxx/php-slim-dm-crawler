@@ -20,6 +20,7 @@ class MenusDaoTest extends DailyMenuTestCase
     protected function setUp()
     {
         $this->truncateTable('menus');
+        $this->truncateTable('restaurants');
         $this->pdo = $this->getPDO();
         $this->dao = new MenusDao($this->pdo);
     }
