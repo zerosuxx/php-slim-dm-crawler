@@ -8,7 +8,7 @@ use Slim\Http\Response;
 
 /**
  * Class HealthCheckAction
- * @package App\Action
+ * @package App\DailyMenu\Action
  */
 class HealthCheckAction
 {
