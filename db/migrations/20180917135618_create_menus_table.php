@@ -37,7 +37,7 @@ class CreateMenusTable extends AbstractMigration
             ->addColumn('restaurant_id', 'integer')
             ->addColumn('foods', 'text')
             ->addColumn('price', 'integer')
-            ->addColumn('date', 'datetime')
+            ->addColumn('date', 'date')
             ->addIndex(['date'])
             ->create();
     }
