@@ -4,6 +4,7 @@ namespace Test\App\Crawler;
 
 use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Entity\Menu;
+use App\DailyMenu\Entity\Restaurant;
 use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
 use Test\App\DailyMenuTestCase;
@@ -43,9 +44,8 @@ class BonnieCrawlerTest extends DailyMenuTestCase
 
     private function createBonnieCrawler($assetFile = 'bonnie_daily_menu_18_09_17-21.html') {
         $file = __DIR__ . '/assets/' . $assetFile;
-        $url = BonnieCrawler::DEFAULT_URL;
-        $clientMock = $this->createClientMock($file, $url);
-        return new BonnieCrawler($clientMock, new Crawler());
+        $clientMock = $this->createClientMock($file);
+        return new BonnieCrawler($clientMock, new Crawler(), new Restaurant('Bonnie', '', 1));
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\DailyMenu\Crawler;
 
 use App\DailyMenu\Entity\Menu;
+use App\DailyMenu\Entity\Restaurant;
 use DateTime;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
@@ -22,38 +23,39 @@ abstract class AbstractCrawler
      */
     private $domCrawler;
     /**
-     * @var string
+     * @var Restaurant
      */
-    private $url;
+    private $restaurant;
 
     /**
      * @param Client $client
      * @param Crawler $domCrawler
-     * @param string $url
+     * @param Restaurant $restaurant
      */
-    public function __construct(Client $client, Crawler $domCrawler, string $url)
+    public function __construct(Client $client, Crawler $domCrawler, Restaurant $restaurant)
     {
         $this->client = $client;
         $this->domCrawler = $domCrawler;
-        $this->url = $url;
+        $this->restaurant = $restaurant;
     }
 
     /**
+     * @param Restaurant $restaurant
      * @param DateTime $date
      * @param Crawler $domCrawler
      * @return Menu
      */
-    abstract protected function createMenu(DateTime $date, Crawler $domCrawler): Menu;
+    abstract protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu;
 
     /**
-     * @param DateTime $date
+     * @param DateTime|null $date [optional]
      * @return Menu
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getDailyMenu(DateTime $date): Menu
+    public function getDailyMenu(DateTime $date = null): Menu
     {
-        $response = $this->client->request('GET', $this->url);
+        $response = $this->client->request('GET', $this->restaurant->getUrl());
         $this->domCrawler->addHtmlContent((string)$response->getBody());
-        return $this->createMenu($date, $this->domCrawler);
+        return $this->createMenu($this->restaurant, $date, $this->domCrawler);
     }
 }

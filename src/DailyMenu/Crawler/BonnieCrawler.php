@@ -3,6 +3,7 @@
 namespace App\DailyMenu\Crawler;
 
 use App\DailyMenu\Entity\Menu;
+use App\DailyMenu\Entity\Restaurant;
 use DateTime;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
@@ -15,19 +16,17 @@ use Symfony\Component\DomCrawler\Crawler;
 class BonnieCrawler extends AbstractCrawler
 {
 
-    const DEFAULT_URL = 'http://bonnierestro.hu/hu/napimenu/';
-
     /**
      * @param Client $client
      * @param Crawler $domCrawler
-     * @param string $url [optional]
+     * @param Restaurant $restaurant
      */
-    public function __construct(Client $client, Crawler $domCrawler, $url = self::DEFAULT_URL)
+    public function __construct(Client $client, Crawler $domCrawler, Restaurant $restaurant)
     {
-        parent::__construct($client, $domCrawler, $url);
+        parent::__construct($client, $domCrawler, $restaurant);
     }
 
-    protected function createMenu(DateTime $date, Crawler $domCrawler): Menu
+    protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
         $dayOfWeek = $date->format('N');
 
@@ -43,6 +42,6 @@ class BonnieCrawler extends AbstractCrawler
         preg_match('/([0-9]+)/', $title, $titleMatches);
         $price = (int)$titleMatches[1];
 
-        return new Menu($date, [$soup, $mainCourse], $price);
+        return new Menu($restaurant->getId(), [$soup, $mainCourse], $price, $date);
     }
 }
