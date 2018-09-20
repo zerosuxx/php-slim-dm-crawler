@@ -25,7 +25,7 @@ class DailyMenuTestCase extends AbstractSlimTestCase
         $appBuilder->addProvider(new ConfigProvider());
     }
 
-    protected function createClientMock(string $file, $url) {
+    protected function createClientMock(string $file) {
         $bodyMock = $this->createMock(StreamInterface::class);
         $bodyMock
             ->expects($this->once())
@@ -43,7 +43,6 @@ class DailyMenuTestCase extends AbstractSlimTestCase
         $clientMock
             ->expects($this->once())
             ->method('request')
-            ->with('GET', $url)
             ->willReturn($responseMock);
         return $clientMock;
     }
