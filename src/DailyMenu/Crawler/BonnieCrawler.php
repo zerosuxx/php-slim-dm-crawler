@@ -5,7 +5,6 @@ namespace App\DailyMenu\Crawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
-use GuzzleHttp\Client;
 use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -15,16 +14,6 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class BonnieCrawler extends AbstractCrawler
 {
-
-    /**
-     * @param Client $client
-     * @param Crawler $domCrawler
-     * @param Restaurant $restaurant
-     */
-    public function __construct(Client $client, Crawler $domCrawler, Restaurant $restaurant)
-    {
-        parent::__construct($client, $domCrawler, $restaurant);
-    }
 
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
