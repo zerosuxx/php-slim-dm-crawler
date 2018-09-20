@@ -1,11 +1,10 @@
 <table class="table">
-    <tr><td>Restaurant</td><td>Foods</td><td>Price</td><td>Last updated</td></tr>
-    {% for menu in menus %}
+    <tr><td>Restaurant</td><td>Foods</td><td>Price</td></tr>
+    {% for restaurant_name,menu in menus %}
         <tr>
-            <td>{{ menu.getRestaurantName() }}</td>
+            <td>{{ restaurant_name }}</td>
             <td><pre>{{ menu.getFoods()|join("\n") }}</pre></td>
             <td>{{ menu.getPrice() }} Ft</td>
-            <td>{{ menu.getDateInTimestamp() }}</td>
         </tr>
     {% endfor %}
 </table>
