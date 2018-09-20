@@ -33,26 +33,30 @@ class MenusDao
             'restaurant_id' => $menu->getRestaurantId(),
             'foods' => implode("\n", $menu->getFoods()),
             'price' => $menu->getPrice(),
-            'date' => $menu->getDateInTimestamp()
+            'date' => $menu->getDateString()
         ]);
     }
 
     /**
      * @return Menu[]
      */
-    public function getMenus()
+    public function getMenusByRestaurants(\DateTime $date)
     {
         $menus = [];
         $statement = $this->pdo->prepare(
-            'SELECT m.foods, m.price, m.date, r.name FROM menus m LEFT JOIN restaurants r ON m.restaurant_id = r.id'
+            'SELECT m.foods, m.price, m.date, r.id AS restaurant_id, r.name AS restaurant_name
+            FROM menus m
+            INNER JOIN restaurants r ON m.restaurant_id = r.id
+            WHERE date = :date
+            GROUP BY r.id'
         );
-        $statement->execute();
+        $statement->execute(['date' => $date->format('Y-m-d')]);
         while($menuData = $statement->fetch(PDO::FETCH_ASSOC)) {
             $date = $menuData['date'];
             $foods = explode("\n", $menuData['foods']);
             $price = $menuData['price'];
-            $menu = new Menu(new \DateTime($date), $foods, $price);
-            $menus[] = $menu->withRestaurantName($menuData['name']);
+            $menu = new Menu($menuData['restaurant_id'], $foods, $price, new \DateTime($date));
+            $menus[$menuData['restaurant_name']] = $menu;
         }
         return $menus;
     }
