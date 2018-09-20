@@ -20,6 +20,10 @@ class RestarauntsSeeder extends AbstractSeed
                 'name' => 'Bonnie',
                 'url' => 'http://bonnierestro.hu/hu/napimenu/'
             ],
+            [
+                'name' => 'KajaHu',
+                'url' => 'https://appif.kajahu.com/jdmenu?jseat=-&jlang=hu'
+            ]
         ];
         $table = $this->table('restaurants');
         $table->truncate();
