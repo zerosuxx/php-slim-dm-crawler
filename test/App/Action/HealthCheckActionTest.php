@@ -1,8 +1,6 @@
 <?php
 
-namespace Test\TodoApp\Integration;
-
-use Test\App\DailyMenuTestCase;
+namespace Test\App;
 
 class HealthCheckActionTest extends DailyMenuTestCase
 {
