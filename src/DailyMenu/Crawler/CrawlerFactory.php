@@ -29,7 +29,8 @@ class CrawlerFactory
      * @var array
      */
     private $classMap = [
-        'Bonnie' => BonnieCrawler::class
+        'Bonnie' => BonnieCrawler::class,
+        'KajaHu' => KajaHuCrawler::class
     ];
 
     /**
