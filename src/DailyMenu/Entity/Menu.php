@@ -9,6 +9,10 @@ namespace App\DailyMenu\Entity;
 class Menu
 {
     /**
+     * @var int
+     */
+    private $restaurantId;
+    /**
      * @var \DateTime
      */
     private $date;
@@ -20,25 +24,27 @@ class Menu
      * @var int|null
      */
     private $price;
-    /**
-     * @var int|null
-     */
-    private $restaurantId = null;
-    /**
-     * @var string|null
-     */
-    private $restaurantName = null;
 
     /**
-     * @param \DateTime $date
+     * @param int $restaurantId
      * @param array $foods
      * @param int|null $price [optional]
+     * @param \DateTime $date [optional]
      */
-    public function __construct(\DateTime $date, array $foods, int $price = null)
+    public function __construct(int $restaurantId, array $foods, int $price = null, \DateTime $date = null)
     {
-        $this->date = $date;
+        $this->restaurantId = $restaurantId;
         $this->foods = $foods;
         $this->price = $price;
+        $this->date = $date ?: new \DateTime();
+    }
+
+    /**
+     * @return int
+     */
+    public function getRestaurantId(): int
+    {
+        return $this->restaurantId;
     }
 
     /**
@@ -52,9 +58,9 @@ class Menu
     /**
      * @return \DateTime
      */
-    public function getDateInTimestamp(): string
+    public function getDateString(): string
     {
-        return $this->date->format('Y-m-d H:i:s');
+        return $this->date->format('Y-m-d');
     }
 
     /**
@@ -71,43 +77,5 @@ class Menu
     public function getPrice(): ?int
     {
         return $this->price;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRestaurantId(): ?int
-    {
-        return $this->restaurantId;
-    }
-
-    /**
-     * @param int $restaurantId
-     * @return self
-     */
-    public function withRestaurantId(int $restaurantId)
-    {
-        $new = clone $this;
-        $new->restaurantId = $restaurantId;
-        return $new;
-    }
-
-    /**
-     * @param string $restaurantName
-     * @return self
-     */
-    public function withRestaurantName(string $restaurantName)
-    {
-        $new = clone $this;
-        $new->restaurantName = $restaurantName;
-        return $new;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRestaurantName(): ?string
-    {
-        return $this->restaurantName;
     }
 }
