@@ -21,16 +21,26 @@ class CrawlerFactoryTest extends TestCase
      */
     public function createCrawlerFromName_ReturnsNewCrawlerInstance()
     {
-        $restaurant = new Restaurant('Test', 'http://test.test');
-
         $restaurantsDaoMock = $this->createMock(RestaurantsDao::class);
         $restaurantsDaoMock
             ->expects($this->once())
             ->method('getRestaurant')
-            ->willReturn($restaurant->withCrawlerClass(BonnieCrawler::class));
+            ->willReturn($this->createMock(Restaurant::class));
 
         $factory = new CrawlerFactory($restaurantsDaoMock, new Client(), new Crawler());
-        $crawler = $factory->createCrawlerFromName('Bonnie');
+        $crawler = $factory->getCrawlerFromRestaurantName('Bonnie');
         $this->assertInstanceOf(BonnieCrawler::class, $crawler);
     }
+
+    /**
+     * @test
+     */
+    public function getCrawlerFromRestaurantName_GivenNotExistsRestaurantName_ThrowsException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $factory = new CrawlerFactory($this->createMock(RestaurantsDao::class), new Client(), new Crawler());
+        $factory->getCrawlerFromRestaurantName('not exists');
+    }
+
+
 }
