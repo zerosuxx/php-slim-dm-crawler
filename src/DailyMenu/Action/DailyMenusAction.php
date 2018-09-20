@@ -28,10 +28,11 @@ class DailyMenusAction
         $this->twig = $twig;
     }
 
-    public function __invoke(Request $request, Response $response)
+    public function __invoke(Request $request, Response $response, array $args)
     {
+        $date = new \DateTime(isset($args['date']) ? $args['date'] : null);
         $this->twig->render($response, 'menus.html.twig', [
-            'menus' => $this->menusDao->getMenus()
+            'menus' => $this->menusDao->getMenusByRestaurants($date)
         ]);
     }
 }
