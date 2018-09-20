@@ -8,7 +8,7 @@ use App\DailyMenu\Dao\MenusDao;
 use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
-use App\DailyMenu\Service\SaveDailyMenuService;
+use App\DailyMenu\Service\SaveDailyMenusService;
 use Test\App\DailyMenuTestCase;
 
 /**
@@ -25,30 +25,31 @@ class SaveDailyMenuServiceTest extends DailyMenuTestCase
         $restaurantId = 1;
         $foods = 'test foods';
         $price = 1000;
-        $date = '2018-09-17 10:00:00';
+        $date = '2018-09-17';
         $dateTime = new \DateTime($date);
         $this->truncateTable('menus');
         $restaurantsDaoMock = $this->createMock(RestaurantsDao::class);
         $restaurantsDaoMock
             ->expects($this->once())
-            ->method('getRestaurants')
+            ->method('getDailyRestaurants')
             ->willReturn([
-                new Restaurant('Bonnie', '', $restaurantId)
+                new Restaurant('Bonnie', '', 1),
+                new Restaurant('Test', '', 2)
             ]);
 
         $bonnieCrawlerMock = $this->createMock(BonnieCrawler::class);
         $bonnieCrawlerMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getDailyMenu')
-            ->willReturn((new Menu($dateTime, [$foods], $price))->withRestaurantId($restaurantId));
+            ->willReturn((new Menu($restaurantId, [$foods], $price, $dateTime)));
 
         $crawlerFactoryMock = $this->createMock(CrawlerFactory::class);
         $crawlerFactoryMock
             ->expects($this->any())
-            ->method('createCrawlerFromName')
+            ->method('getCrawlerFromRestaurantName')
             ->willReturn($bonnieCrawlerMock);
 
-        $service = new SaveDailyMenuService(
+        $service = new SaveDailyMenusService(
             $restaurantsDaoMock,
             $this->getService(MenusDao::class),
             $crawlerFactoryMock
