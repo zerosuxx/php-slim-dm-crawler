@@ -8,7 +8,7 @@ use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Crawler\CrawlerFactory;
 use App\DailyMenu\Dao\MenusDao;
 use App\DailyMenu\Dao\RestaurantsDao;
-use App\DailyMenu\Service\SaveDailyMenuService;
+use App\DailyMenu\Service\SaveDailyMenusService;
 use GuzzleHttp\Client;
 use PDO;
 use Psr\Container\ContainerInterface;
@@ -33,17 +33,13 @@ class ConfigProvider
     public function loadConfig(ContainerInterface $container)
     {
         $container['settings']['displayErrorDetails'] = (bool)getenv('DEBUG');
-        $container['app_config'] = [
-            'crawler_aliases' => [
-                'Bonnie' => BonnieCrawler::class
-            ]
-        ];
     }
 
     public function loadRoutes(App $app)
     {
         $app->get('/healthcheck', HealthCheckAction::class);
         $app->get('/menus', DailyMenusAction::class);
+        $app->get('/menus/{date}', DailyMenusAction::class);
     }
 
     public function loadDependencies(ContainerInterface $container)
@@ -52,6 +48,7 @@ class ConfigProvider
             $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', getenv('DB_HOST'), getenv('DB_NAME'));
             $pdo = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASSWORD'));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->exec('SET sql_mode=""');
             return $pdo;
         };
         $container['Client'] = function () {
@@ -81,11 +78,10 @@ class ConfigProvider
             return new MenusDao($container->get('pdo'));
         };
         $container[RestaurantsDao::class] = function (ContainerInterface $container) {
-            $appConfig = $container->get('app_config');
-            return new RestaurantsDao($container->get('pdo'), $appConfig['crawler_aliases']);
+            return new RestaurantsDao($container->get('pdo'));
         };
-        $container[SaveDailyMenuService::class] = function (ContainerInterface $container) {
-            return new SaveDailyMenuService(
+        $container[SaveDailyMenusService::class] = function (ContainerInterface $container) {
+            return new SaveDailyMenusService(
                 $container->get(RestaurantsDao::class),
                 $container->get(MenusDao::class),
                 $container->get(CrawlerFactory::class)
