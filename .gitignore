@@ -2,6 +2,7 @@
 vendor/
 coverage/
 config/environment/mysql/
+logs/
 .DS_Store
 .DS_Store?
 clover.xml
