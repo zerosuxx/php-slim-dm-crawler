@@ -3,6 +3,7 @@
 namespace App\DailyMenu\Dao;
 
 use App\DailyMenu\Entity\Menu;
+use DateTime;
 use PDO;
 
 /**
@@ -38,25 +39,29 @@ class MenusDao
     }
 
     /**
+     * @param DateTime $startDate
+     * @param DateTime $endDate
      * @return Menu[]
      */
-    public function getMenusByRestaurants(\DateTime $date)
+    public function getMenusBetweenDatesByRestaurants(DateTime $startDate, DateTime $endDate)
     {
         $menus = [];
         $statement = $this->pdo->prepare(
             'SELECT m.foods, m.price, m.date, r.id AS restaurant_id, r.name AS restaurant_name
             FROM menus m
             INNER JOIN restaurants r ON m.restaurant_id = r.id
-            WHERE date = :date
-            GROUP BY r.id'
+            WHERE date BETWEEN :startDate AND :endDate'
         );
-        $statement->execute(['date' => $date->format('Y-m-d')]);
+        $statement->execute([
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d')
+        ]);
         while($menuData = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $date = $menuData['date'];
+            $startDate = $menuData['date'];
             $foods = explode("\n", $menuData['foods']);
             $price = $menuData['price'];
-            $menu = new Menu($menuData['restaurant_id'], $foods, $price, new \DateTime($date));
-            $menus[$menuData['restaurant_name']] = $menu;
+            $menu = new Menu($menuData['restaurant_id'], $foods, $price, new DateTime($startDate));
+            $menus[$menuData['restaurant_name']][] = $menu;
         }
         return $menus;
     }
