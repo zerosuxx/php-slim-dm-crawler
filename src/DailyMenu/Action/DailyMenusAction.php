@@ -3,6 +3,7 @@
 namespace App\DailyMenu\Action;
 
 use App\DailyMenu\Dao\MenusDao;
+use App\DailyMenu\Entity\Menu;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -30,9 +31,25 @@ class DailyMenusAction
 
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $date = new \DateTime(isset($args['date']) ? $args['date'] : null);
+        $startDate = new \DateTime(isset($args['startDate']) ? $args['startDate'] : null);
+        $endDate = isset($args['endDate']) ? new \DateTime($args['endDate']) : $startDate;
+
+        $menusByRestaurants = $this->menusDao->getMenusBetweenDatesByRestaurants($startDate, $endDate);
+
         $this->twig->render($response, 'menus.html.twig', [
-            'menus' => $this->menusDao->getMenusByRestaurants($date)
+            'menus' => $this->getMenusByDates($menusByRestaurants)
         ]);
+    }
+
+    private function getMenusByDates(array $menusByRestaurants) {
+        $menusByDates = [];
+        foreach ($menusByRestaurants as $restaurant => $menus) {
+            /* @var $menus Menu[] */
+            foreach($menus as $menu) {
+                $date = $menu->getDate()->format('Y-m-d');
+                $menusByDates[$date][$restaurant] = $menu;
+            }
+        }
+        return $menusByDates;
     }
 }
