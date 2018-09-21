@@ -1,15 +1,14 @@
 <?php
 
-namespace Test\App\Crawler;
+namespace Test\DailyMenu\Crawler;
 
 use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
-use Symfony\Component\DomCrawler\Crawler;
-use Test\App\DailyMenuTestCase;
+use Test\DailyMenu\DailyMenuSlimTestCase;
 
-class BonnieCrawlerTest extends DailyMenuTestCase
+class BonnieCrawlerTest extends DailyMenuSlimTestCase
 {
     /**
      * @test
@@ -45,7 +44,7 @@ class BonnieCrawlerTest extends DailyMenuTestCase
     private function createBonnieCrawler($assetFile = 'bonnie_daily_menu_18_09_17-21.html') {
         $file = __DIR__ . '/assets/' . $assetFile;
         $clientMock = $this->createClientMock($file);
-        return new BonnieCrawler($clientMock, new Crawler(), new Restaurant('Bonnie', '', 1));
+        return new BonnieCrawler($clientMock, $this->getService('domCrawler'), new Restaurant('Bonnie', '', 1));
     }
 
 

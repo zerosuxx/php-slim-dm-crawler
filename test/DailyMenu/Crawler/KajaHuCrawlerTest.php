@@ -1,14 +1,14 @@
 <?php
 
-namespace Test\App\Crawler;
+namespace Test\DailyMenu\Crawler;
 
+use App\DailyMenu\Crawler\KajaHuCrawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
-use Symfony\Component\DomCrawler\Crawler;
-use Test\App\DailyMenuTestCase;
+use Test\DailyMenu\DailyMenuSlimTestCase;
 
-class KajaHuCrawlerTest extends DailyMenuTestCase
+class KajaHuCrawlerTest extends DailyMenuSlimTestCase
 {
     /**
      * @test
@@ -37,7 +37,7 @@ class KajaHuCrawlerTest extends DailyMenuTestCase
     private function createCrawler($assetFile = 'kajahu_daily_menu_18_09_20.json') {
         $file = __DIR__ . '/assets/' . $assetFile;
         $clientMock = $this->createClientMock($file);
-        return new \App\DailyMenu\Crawler\KajaHuCrawler($clientMock, new Crawler(), new Restaurant('Kajahu', '', 1));
+        return new KajaHuCrawler($clientMock, $this->getService('domCrawler'), new Restaurant('Kajahu', '', 1));
     }
 
 

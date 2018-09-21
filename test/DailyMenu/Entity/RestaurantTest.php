@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\App\Entity;
+namespace Test\DailyMenu\Entity;
 
 use App\DailyMenu\Entity\Restaurant;
 use PHPUnit\Framework\TestCase;

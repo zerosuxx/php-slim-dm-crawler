@@ -1,8 +1,10 @@
 <?php
 
-namespace Test\App;
+namespace Test\Skeleton\App;
 
-class HealthCheckActionTest extends DailyMenuTestCase
+use App\Skeleton\TestSuite\AppSlimTestCase;
+
+class HealthCheckActionTest extends AppSlimTestCase
 {
 
     /**

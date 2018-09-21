@@ -1,8 +1,10 @@
 <?php
 
-namespace Test\App;
+namespace Test\DailyMenu\Action;
 
-class DailyMenusActionTest extends DailyMenuTestCase
+use Test\DailyMenu\DailyMenuSlimTestCase;
+
+class DailyMenusActionTest extends DailyMenuSlimTestCase
 {
     /**
      * @test

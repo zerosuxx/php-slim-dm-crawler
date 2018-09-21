@@ -1,20 +1,25 @@
 <?php
 
-namespace Test\App\Dao;
+namespace Test\DailyMenu\Dao;
 
 use App\DailyMenu\Dao\MenusDao;
 use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
-use Test\App\DailyMenuTestCase;
+use Test\DailyMenu\DailyMenuSlimTestCase;
 
-class RestaurantsDaoTest extends DailyMenuTestCase
+class RestaurantsDaoTest extends DailyMenuSlimTestCase
 {
 
     /**
      * @var \PDO
      */
     private $pdo;
+
+    /**
+     * @var RestaurantsDao
+     */
+    private $restaurantsDao = null;
 
     protected function setUp()
     {
@@ -25,6 +30,7 @@ class RestaurantsDaoTest extends DailyMenuTestCase
             'INSERT INTO restaurants (name, url)
             VALUES ("Test", "http://test.test"), ("Test2", "http://test.test"), ("Test3", "http://test.test")'
         );
+        $this->restaurantsDao = $this->getService(RestaurantsDao::class);
     }
 
     /**
@@ -32,7 +38,7 @@ class RestaurantsDaoTest extends DailyMenuTestCase
      */
     public function getRestaurant_ReturnsRestaurant()
     {
-        $dao = new RestaurantsDao($this->pdo);
+        $dao = $this->restaurantsDao;
 
         $restaurant = $dao->getRestaurant('Test');
         $this->assertInstanceOf(Restaurant::class, $restaurant);
@@ -51,7 +57,7 @@ class RestaurantsDaoTest extends DailyMenuTestCase
         $menusDao->save(new Menu(1, [], 0, new \DateTime('2018-09-20')));
         $menusDao->save(new Menu(2, [], 0, new \DateTime('2018-09-20')));
         $menusDao->save(new Menu(3, [], 0, new \DateTime('2018-09-21')));
-        $dao = new RestaurantsDao($this->pdo);
+        $dao = $this->restaurantsDao;
 
         $restaurants = $dao->getDailyRestaurants(new \DateTime('2018-09-21'));
         $this->assertCount(2, $restaurants);
@@ -64,7 +70,7 @@ class RestaurantsDaoTest extends DailyMenuTestCase
      */
     public function getDailyRestaurants_WithoutMenus_ReturnsAllDailyRestaurants()
     {
-        $dao = new RestaurantsDao($this->pdo);
+        $dao = $this->restaurantsDao;
 
         $restaurants = $dao->getDailyRestaurants(new \DateTime());
         $this->assertCount(3, $restaurants);

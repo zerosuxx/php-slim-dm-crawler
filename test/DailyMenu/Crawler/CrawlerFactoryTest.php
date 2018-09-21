@@ -1,20 +1,20 @@
 <?php
 
-namespace Test\App\Crawler;
+namespace Test\DailyMenu\Crawler;
 
 use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Crawler\CrawlerFactory;
 use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Entity\Restaurant;
 use GuzzleHttp\Client;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Test\DailyMenu\DailyMenuSlimTestCase;
 
 /**
  * Class CrawlerFactoryTest
  * @package Test\App\Crawler
  */
-class CrawlerFactoryTest extends TestCase
+class CrawlerFactoryTest extends DailyMenuSlimTestCase
 {
     /**
      * @test

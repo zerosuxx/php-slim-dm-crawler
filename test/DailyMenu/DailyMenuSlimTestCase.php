@@ -1,20 +1,27 @@
 <?php
 
-namespace Test\App;
+namespace Test\DailyMenu;
 
 use App\AppBuilder;
 use App\DailyMenu\ConfigProvider;
-use App\TestSuite\AbstractSlimTestCase;
+use App\Skeleton\TestSuite\AppSlimTestCase;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Slim\App;
 
 /**
- * Class DailyMenuTestCase
+ * Class DailyMenuSlimTestCase
  * @package Test\App
  */
-class DailyMenuTestCase extends AbstractSlimTestCase
+class DailyMenuSlimTestCase extends AppSlimTestCase
 {
+
+    protected function initializeApp(App $app)
+    {
+        parent::initializeApp($app);
+        $this->mockService($app->getContainer(), 'client', $this->createMock(Client::class));
+    }
 
     /**
      * @param AppBuilder $appBuilder
@@ -22,6 +29,7 @@ class DailyMenuTestCase extends AbstractSlimTestCase
      */
     protected function addProvider(AppBuilder $appBuilder)
     {
+        parent::addProvider($appBuilder);
         $appBuilder->addProvider(new ConfigProvider());
     }
 
