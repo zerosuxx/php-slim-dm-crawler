@@ -3,14 +3,12 @@
 namespace App\DailyMenu;
 
 use App\DailyMenu\Action\DailyMenusAction;
-use App\DailyMenu\Action\HealthCheckAction;
-use App\DailyMenu\Crawler\BonnieCrawler;
 use App\DailyMenu\Crawler\CrawlerFactory;
 use App\DailyMenu\Dao\MenusDao;
 use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Service\SaveDailyMenusService;
+use Exception;
 use GuzzleHttp\Client;
-use PDO;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Views\Twig;
@@ -25,40 +23,42 @@ class ConfigProvider
 {
     public function __invoke(App $app)
     {
-        $this->loadConfig($app->getContainer());
         $this->loadRoutes($app);
         $this->loadDependencies($app->getContainer());
     }
 
-    public function loadConfig(ContainerInterface $container)
-    {
-        $container['settings']['displayErrorDetails'] = (bool)getenv('DEBUG');
-    }
-
     public function loadRoutes(App $app)
     {
-        $app->get('/healthcheck', HealthCheckAction::class);
         $app->get('/menus', DailyMenusAction::class);
-        $app->get('/menus/{date}', DailyMenusAction::class);
+        $app->get('/menus/{startDate}', DailyMenusAction::class);
+        $app->get('/menus/{startDate}/{endDate}', DailyMenusAction::class);
     }
 
     public function loadDependencies(ContainerInterface $container)
     {
-        $container['pdo'] = function () {
-            $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', getenv('DB_HOST'), getenv('DB_NAME'));
-            $pdo = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASSWORD'));
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->exec('SET sql_mode=""');
-            return $pdo;
-        };
-        $container['Client'] = function () {
+        $container['client'] = function () {
             return new Client();
         };
-        $container['DomCrawler'] = function () {
+
+        $container['domCrawler'] = function () {
             return new Crawler();
         };
-        $container['Twig'] = function (ContainerInterface $container) {
-            $view = new Twig(__DIR__ . '/templates', [
+
+        $container['errorLogger'] = function (ContainerInterface $container) {
+            return function($file, Exception $exception) use($container) {
+                $logDir = $container['rootDir'] . '/logs';
+                if(!file_exists($logDir)) {
+                    mkdir($logDir, 0777, true);
+                }
+                $errorMessage = '[' . date('Y-m-d H:i:s') . '] ' . get_class($exception) . ': ' . $exception->getMessage() . "\n"
+                . '## ' . $exception->getFile() . '('.$exception->getLine().')' . "\n"
+                . $exception->getTraceAsString() . "\n";
+                error_log($errorMessage, 3, $logDir . '/dailymenu_' . $file . '.log');
+            };
+        };
+
+        $container['twig'] = function (ContainerInterface $container) {
+            $view = new Twig(__DIR__ . '/Templates', [
                 'cache' => false
             ]);
 
@@ -70,8 +70,8 @@ class ConfigProvider
         $container[CrawlerFactory::class] = function (ContainerInterface $container) {
             return new CrawlerFactory(
                 $container->get(RestaurantsDao::class),
-                $container->get('Client'),
-                $container->get('DomCrawler')
+                $container->get('client'),
+                $container->get('domCrawler')
             );
         };
         $container[MenusDao::class] = function (ContainerInterface $container) {
@@ -84,14 +84,12 @@ class ConfigProvider
             return new SaveDailyMenusService(
                 $container->get(RestaurantsDao::class),
                 $container->get(MenusDao::class),
-                $container->get(CrawlerFactory::class)
+                $container->get(CrawlerFactory::class),
+                $container->get('errorLogger')
             );
         };
-        $container[HealthCheckAction::class] = function (ContainerInterface $container) {
-            return new HealthCheckAction($container->get('pdo'));
-        };
         $container[DailyMenusAction::class] = function (ContainerInterface $container) {
-            return new DailyMenusAction($container->get(MenusDao::class), $container->get('Twig'));
+            return new DailyMenusAction($container->get(MenusDao::class), $container->get('twig'));
         };
     }
 }
