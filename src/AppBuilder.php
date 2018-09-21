@@ -11,7 +11,7 @@ class AppBuilder
 {
 
     /**
-     * @var array
+     * @var callable[]
      */
     private $providers = [];
 
@@ -32,10 +32,18 @@ class AppBuilder
     public function buildApp($container = []): App
     {
         $app = new App($container);
+        $this->attachProviders($app);
+        return $app;
+    }
+
+    /**
+     * @param App $app
+     */
+    public function attachProviders(App $app)
+    {
         foreach ($this->providers as $provider) {
             $provider($app);
         }
-        return $app;
     }
 
 }
