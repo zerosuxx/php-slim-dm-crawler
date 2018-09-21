@@ -81,7 +81,7 @@ class CrawlerFactory
      * @return AbstractCrawler
      */
     private function buildCrawler(string $class, Client $client, Crawler $crawler, Restaurant $restaurant): AbstractCrawler {
-        return new $class($client, $crawler, $restaurant);
+        return new $class($client, clone $crawler, $restaurant);
     }
 
 
