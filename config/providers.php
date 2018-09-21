@@ -1,8 +1,8 @@
 <?php
 
 use App\AppBuilder;
-use App\DailyMenu\ConfigProvider;
 
 return function(AppBuilder $appBuilder) {
-    $appBuilder->addProvider(new ConfigProvider());
+    $appBuilder->addProvider(new \App\Skeleton\ConfigProvider());
+    $appBuilder->addProvider(new \App\DailyMenu\ConfigProvider());
 };
