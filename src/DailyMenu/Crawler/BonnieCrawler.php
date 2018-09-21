@@ -15,6 +15,8 @@ use Symfony\Component\DomCrawler\Crawler;
 class BonnieCrawler extends AbstractCrawler
 {
 
+
+
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
         $dayOfWeek = $date->format('N');
