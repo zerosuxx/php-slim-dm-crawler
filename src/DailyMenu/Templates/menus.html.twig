@@ -1,10 +1,13 @@
 <table class="table">
     <tr><td>Restaurant</td><td>Foods</td><td>Price</td></tr>
-    {% for restaurant_name,menu in menus %}
-        <tr>
-            <td>{{ restaurant_name }}</td>
-            <td><pre>{{ menu.getFoods()|join("\n") }}</pre></td>
-            <td>{{ menu.getPrice() }} Ft</td>
-        </tr>
+    {% for date,menus_by_restaurants in menus %}
+        <tr><td colspan="3">{{ date }}</td></tr>
+        {% for restaurant_name,menu in menus_by_restaurants %}
+            <tr>
+                <td>{{ restaurant_name }}</td>
+                <td><pre>{{ menu.getFoods()|join("\n") }}</pre></td>
+                <td>{{ menu.getPrice() }} Ft</td>
+            </tr>
+        {% endfor %}
     {% endfor %}
 </table>
