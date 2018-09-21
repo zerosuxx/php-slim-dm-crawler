@@ -1,15 +1,11 @@
 <?php
 
-namespace App\DailyMenu\Action;
+namespace App\Skeleton\Action;
 
 use PDO;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-/**
- * Class HealthCheckAction
- * @package App\DailyMenu\Action
- */
 class HealthCheckAction
 {
     /**

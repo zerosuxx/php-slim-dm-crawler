@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TestSuite;
+namespace App\Skeleton\TestSuite;
 
 use PDO;
 use PDOStatement;
@@ -62,33 +62,6 @@ abstract class AbstractSlimTestCase extends TestCase
     }
 
     /**
-     * @param string $name
-     * @return mixed
-     */
-    protected function getService($name)
-    {
-        return $this->getApp()->getContainer()->get($name);
-    }
-
-    /**
-     * @param string $name [optional] default: pdo
-     * @return PDO
-     */
-    protected function getPDO($name = 'pdo'): PDO
-    {
-        return $this->getService($name);
-    }
-
-    /**
-     * @param string $table
-     * @return bool|PDOStatement
-     */
-    protected function truncateTable($table)
-    {
-        return $this->getPDO()->query('TRUNCATE TABLE ' . $table);
-    }
-
-    /**
      * @param string $requestMethod
      * @param string $requestUri
      * @param array|null $requestData
@@ -118,17 +91,44 @@ abstract class AbstractSlimTestCase extends TestCase
     }
 
     /**
-     * @param Container $container
-     * @param $name
-     * @param $mock
-     * @param string $prefix [optional] default: original_
+     * @param string $name
+     * @return mixed
      */
-    protected function mockService(Container $container, $name, $mock, $prefix = 'original_')
+    protected function getService($name)
+    {
+        return $this->getApp()->getContainer()->get($name);
+    }
+
+    /**
+     * @param string $name [optional] default: pdo
+     * @return PDO
+     */
+    protected function getPDO($name = 'pdo'): PDO
+    {
+        return $this->getService($name);
+    }
+
+    /**
+     * @param string $table
+     * @return bool|PDOStatement
+     */
+    protected function truncateTable($table)
+    {
+        return $this->getPDO()->query('TRUNCATE TABLE ' . $table);
+    }
+
+    /**
+     * @param Container $container
+     * @param string $name
+     * @param $mock
+     * @param string $originalPrefix [optional] default: original_
+     */
+    protected function mockService(Container $container, $name, $mock, $originalPrefix = 'original_')
     {
         if (isset($container[$name])) {
             $service = $container[$name];
             unset($container[$name]);
-            $container[$prefix . $name] = $service;
+            $container[$originalPrefix . $name] = $service;
         }
         $container[$name] = $mock;
     }
