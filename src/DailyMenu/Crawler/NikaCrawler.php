@@ -5,6 +5,7 @@ namespace App\DailyMenu\Crawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
+use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -85,7 +86,7 @@ class NikaCrawler extends AbstractCrawler
      * @param DateTime $date
      * @param Crawler $domCrawler
      * @return array
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function getPostAndDayNum(Crawler $domCrawler, DateTime $date): array
     {
@@ -97,6 +98,6 @@ class NikaCrawler extends AbstractCrawler
                 return [$posts->eq($index), $dayNum];
             }
         }
-        throw new \InvalidArgumentException('Daily menu not found for this date');
+        throw new InvalidArgumentException('Daily menu not found for this date');
     }
 }
