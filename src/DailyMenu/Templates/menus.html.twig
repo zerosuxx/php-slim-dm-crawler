@@ -1,10 +1,15 @@
+<form method="GET">
+    Start Date: <input type="date" name="start_date"><br>
+    End Date: <input type="date" name="end_date"><br>
+    <input type="submit" value="search">
+</form>
 <table class="table">
-    <tr><td>Restaurant</td><td>Foods</td><td>Price</td></tr>
+    <tr style="font-weight: bold"><td>Restaurant</td><td>Foods</td><td>Price</td></tr>
     {% for date,menus_by_restaurants in menus %}
-        <tr><td colspan="3">{{ date }}</td></tr>
+        <tr><td colspan="3"><h2>{{ date }}</h2></td></tr>
         {% for restaurant_name,menu in menus_by_restaurants %}
             <tr>
-                <td>{{ restaurant_name }}</td>
+                <td><h3>{{ restaurant_name }}</h3></td>
                 <td><pre>{{ menu.getFoods()|join("\n") }}</pre></td>
                 <td>{{ menu.getPrice() }} Ft</td>
             </tr>
