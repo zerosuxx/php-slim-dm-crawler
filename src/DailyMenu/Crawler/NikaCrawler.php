@@ -25,9 +25,9 @@ class NikaCrawler extends AbstractCrawler
         $postIndex = null;
         $posts = $domCrawler->filter('[data-sigil="expose"]');
         foreach($posts as $index => $postElement) {
-            if(strpos($postElement->textContent, $date->format('Y.m.d') . '-') !== false) {
+            if(strpos($postElement->textContent, $date->format('Y.m.d')) !== false) {
                 $dayNum = 0;
-            } else if(strpos($postElement->textContent, '-' . $date->format('m.d.')) !== false) {
+            } else if(strpos($postElement->textContent, $date->format('m.d.')) !== false) {
                 $dayNum = 1;
             }
             if(null !== $dayNum) {

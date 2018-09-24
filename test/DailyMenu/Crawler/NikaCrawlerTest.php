@@ -47,7 +47,7 @@ class NikaCrawlerTest extends DailyMenuSlimTestCase
     public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->createCrawler()->getDailyMenu(new DateTime('2018-09-26'));
+        $this->createCrawler()->getDailyMenu(new DateTime('2018-09-23'));
     }
 
     private function createCrawler($assetFile = 'nika_daily_menu_18_09_24-25.html') {
