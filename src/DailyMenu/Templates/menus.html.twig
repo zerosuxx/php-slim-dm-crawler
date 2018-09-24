@@ -1,18 +1,22 @@
-<form method="GET">
-    Start Date: <input type="date" name="start_date"><br>
-    End Date: <input type="date" name="end_date"><br>
-    <input type="submit" value="search">
-</form>
-<table class="table">
-    <tr style="font-weight: bold"><td>Restaurant</td><td>Foods</td><td>Price</td></tr>
-    {% for date,menus_by_restaurants in menus %}
-        <tr><td colspan="3"><h2>{{ date }}</h2></td></tr>
-        {% for restaurant_name,menu in menus_by_restaurants %}
-            <tr>
-                <td><h3>{{ restaurant_name }}</h3></td>
-                <td><pre>{{ menu.getFoods()|join("\n") }}</pre></td>
-                <td>{{ menu.getPrice() }} Ft</td>
-            </tr>
+{% extends "layout.html.twig" %}
+
+{% block contents %}
+    <form class="text-right" method="GET">
+        Start Date: <input type="date" name="start_date" value="{{ "now"|date("Y-m-d") }}">
+        End Date: <input type="date" name="end_date" value="{{ "now"|date("Y-m-d") }}">
+        <input type="submit" value="search">
+    </form>
+    <table class="table">
+        <tr style="font-weight: bold"><td>Restaurant</td><td>Foods</td><td>Price</td></tr>
+        {% for date,menus_by_restaurants in menus %}
+            <tr><td colspan="3"><h3>{{ date }}</h3></td></tr>
+            {% for restaurant_name,menu in menus_by_restaurants %}
+                <tr>
+                    <td><h4>{{ restaurant_name }}</h4></td>
+                    <td><ul><li>{{ menu.getFoods()|join("</li><li>")|raw }}</li></ul></td>
+                    <td>{{ menu.getPrice() }} Ft</td>
+                </tr>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
-</table>
+    </table>
+{% endblock %}
