@@ -33,6 +33,14 @@ class MuzikumCrawler extends AbstractCrawler
         return new Menu($restaurant->getId(), $foods, $this->getPrice($domCrawler), $date);
     }
 
+    /**
+     * @return string
+     */
+    protected function getUrl()
+    {
+        return 'http://muzikum.hu/heti-menu/';
+    }
+
     private function getPrice(Crawler $domCrawler)
     {
         $priceMatches = [];

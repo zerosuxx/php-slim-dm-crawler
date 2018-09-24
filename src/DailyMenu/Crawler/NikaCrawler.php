@@ -32,6 +32,14 @@ class NikaCrawler extends AbstractCrawler
     }
 
     /**
+     * @return string
+     */
+    protected function getUrl()
+    {
+        return 'https://iphone.facebook.com/nikadelimenu/posts/?ref=page_internal&mt_nav=0';
+    }
+
+    /**
      * @param Crawler $post
      * @param int $dayNum
      * @return mixed
@@ -58,7 +66,7 @@ class NikaCrawler extends AbstractCrawler
      * @param \DOMElement[] $menuData
      * @return array
      */
-    protected function getFoods(array $menuData)
+    private function getFoods(array $menuData)
     {
         $foods = array_slice(explode(' - ', $menuData[0]->textContent), 1);
         $dessert = explode(' - ', $menuData[1]->textContent, 2);
@@ -71,7 +79,7 @@ class NikaCrawler extends AbstractCrawler
      * @param $postElement
      * @return int
      */
-    protected function getDayNum(DateTime $date, \DOMElement $postElement): ?int
+    private function getDayNum(DateTime $date, \DOMElement $postElement): ?int
     {
         $dayNum = null;
         if (strpos($postElement->textContent, $date->format('Y.m.d')) !== false) {
@@ -88,7 +96,7 @@ class NikaCrawler extends AbstractCrawler
      * @return array
      * @throws InvalidArgumentException
      */
-    protected function getPostAndDayNum(Crawler $domCrawler, DateTime $date): array
+    private function getPostAndDayNum(Crawler $domCrawler, DateTime $date): array
     {
         $dayNum = null;
         $posts = $domCrawler->filter('[data-sigil="expose"]');

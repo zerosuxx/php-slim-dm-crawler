@@ -38,10 +38,18 @@ class VendiakCrawler extends AbstractCrawler
     }
 
     /**
+     * @return string
+     */
+    protected function getUrl()
+    {
+        return 'http://www.vendiaketterem.hu/';
+    }
+
+    /**
      * @param array $menuData
      * @return array
      */
-    protected function formatMenuData(array $menuData): array
+    private function formatMenuData(array $menuData): array
     {
         $trimValues = array_map('trim', $menuData);
         $filteredValues = array_filter($trimValues);

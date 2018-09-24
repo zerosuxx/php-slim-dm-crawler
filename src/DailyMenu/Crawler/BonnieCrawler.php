@@ -33,6 +33,11 @@ class BonnieCrawler extends AbstractCrawler
         return new Menu($restaurant->getId(), $foods, $price, $date);
     }
 
+    protected function getUrl()
+    {
+        return 'http://bonnierestro.hu/hu/napimenu/';
+    }
+
     /**
      * @param Crawler $domCrawler
      * @param int $day
@@ -59,7 +64,7 @@ class BonnieCrawler extends AbstractCrawler
      * @param $domCrawler
      * @return array
      */
-    protected function getFoods(Crawler $domCrawler): array
+    private function getFoods(Crawler $domCrawler): array
     {
         $soup = trim($domCrawler->filter('tr:nth-child(2) td:nth-child(3)')->text());
         $mainCourse = trim($domCrawler->filter('tr:nth-child(3) td:nth-child(3)')->text());

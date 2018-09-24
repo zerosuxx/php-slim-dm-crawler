@@ -31,4 +31,12 @@ class KajaHuCrawler extends AbstractCrawler
         }
         throw new \InvalidArgumentException('Daily menu not found for this date');
     }
+
+    /**
+     * @return string
+     */
+    protected function getUrl()
+    {
+        return 'https://appif.kajahu.com/jdmenu?jseat=-&jlang=hu';
+    }
 }

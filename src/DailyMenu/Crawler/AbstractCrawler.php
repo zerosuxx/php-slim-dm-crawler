@@ -47,6 +47,8 @@ abstract class AbstractCrawler
      */
     abstract protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu;
 
+    abstract protected function getUrl();
+
     /**
      * @param DateTime|null $date [optional]
      * @return Menu
@@ -54,7 +56,7 @@ abstract class AbstractCrawler
      */
     public function getDailyMenu(DateTime $date = null): Menu
     {
-        $response = $this->client->request('GET', $this->restaurant->getUrl());
+        $response = $this->client->request('GET', $this->getUrl());
         $this->domCrawler->addHtmlContent((string)$response->getBody());
         return $this->createMenu($this->restaurant, $date, $this->domCrawler);
     }
