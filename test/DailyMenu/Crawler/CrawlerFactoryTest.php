@@ -10,10 +10,6 @@ use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Test\DailyMenu\DailyMenuSlimTestCase;
 
-/**
- * Class CrawlerFactoryTest
- * @package Test\App\Crawler
- */
 class CrawlerFactoryTest extends DailyMenuSlimTestCase
 {
     /**
