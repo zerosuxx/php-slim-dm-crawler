@@ -21,22 +21,7 @@ class NikaCrawler extends AbstractCrawler
      */
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
-        $dayNum = null;
-        $postIndex = null;
-        $posts = $domCrawler->filter('[data-sigil="expose"]');
-        foreach($posts as $index => $postElement) {
-            $dayNum = $this->getDayNum($date, $postElement);
-            if(null !== $dayNum) {
-                $postIndex = $index;
-                break;
-            }
-        }
-
-        if(!$postIndex) {
-            throw new \InvalidArgumentException('Daily menu not found for this date');
-        }
-
-        $post = $posts->eq($postIndex);
+        list($post, $dayNum) = $this->getPostAndDayNum($domCrawler, $date);
 
         $menuData = $this->getMenuData($post, $dayNum);
 
@@ -94,5 +79,24 @@ class NikaCrawler extends AbstractCrawler
             $dayNum = 1;
         }
         return $dayNum;
+    }
+
+    /**
+     * @param DateTime $date
+     * @param Crawler $domCrawler
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    protected function getPostAndDayNum(Crawler $domCrawler, DateTime $date): array
+    {
+        $dayNum = null;
+        $posts = $domCrawler->filter('[data-sigil="expose"]');
+        foreach ($posts as $index => $postElement) {
+            $dayNum = $this->getDayNum($date, $postElement);
+            if (null !== $dayNum) {
+                return [$posts->eq($index), $dayNum];
+            }
+        }
+        throw new \InvalidArgumentException('Daily menu not found for this date');
     }
 }
