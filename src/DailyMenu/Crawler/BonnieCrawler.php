@@ -15,8 +15,6 @@ use Symfony\Component\DomCrawler\Crawler;
 class BonnieCrawler extends AbstractCrawler
 {
 
-
-
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
         $dayOfWeek = $date->format('N');
@@ -39,6 +37,7 @@ class BonnieCrawler extends AbstractCrawler
      * @param Crawler $domCrawler
      * @param int $day
      * @return string|null left|right
+     * @throws \InvalidArgumentException
      */
     private function getColumn(Crawler $domCrawler, int $day)
     {
@@ -57,13 +56,13 @@ class BonnieCrawler extends AbstractCrawler
     }
 
     /**
-     * @param $dailyMenu
+     * @param $domCrawler
      * @return array
      */
-    protected function getFoods($dailyMenu): array
+    protected function getFoods(Crawler $domCrawler): array
     {
-        $soup = trim($dailyMenu->filter('tr:nth-child(2) td:nth-child(3)')->text());
-        $mainCourse = trim($dailyMenu->filter('tr:nth-child(3) td:nth-child(3)')->text());
+        $soup = trim($domCrawler->filter('tr:nth-child(2) td:nth-child(3)')->text());
+        $mainCourse = trim($domCrawler->filter('tr:nth-child(3) td:nth-child(3)')->text());
         return [$soup, $mainCourse];
     }
 
