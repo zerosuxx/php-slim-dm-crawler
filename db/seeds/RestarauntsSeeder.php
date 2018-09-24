@@ -27,6 +27,10 @@ class RestarauntsSeeder extends AbstractSeed
             [
                 'name' => 'Nika',
                 'url' => 'https://iphone.facebook.com/nikadelimenu/posts/?ref=page_internal&mt_nav=0'
+            ],
+            [
+                'name' => 'Véndiák',
+                'url' => 'http://www.vendiaketterem.hu/'
             ]
         ];
         $table = $this->table('restaurants');
