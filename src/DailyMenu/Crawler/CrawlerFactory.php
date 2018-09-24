@@ -32,7 +32,8 @@ class CrawlerFactory
         'Bonnie' => BonnieCrawler::class,
         'KajaHu' => KajaHuCrawler::class,
         'Nika' => NikaCrawler::class,
-        'Véndiák' => VendiakCrawler::class
+        'Véndiák' => VendiakCrawler::class,
+        'Muzikum' => MuzikumCrawler::class
     ];
 
     /**
