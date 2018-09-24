@@ -47,7 +47,7 @@ class MenusDaoTest extends DailyMenuSlimTestCase
     public function getMenusBetweenDatesByRestaurants_WithMenus_ReturnsFilteredRecordsFromDatabase()
     {
         $this->pdo->query(
-            'INSERT INTO restaurants (name, url) VALUES ("Test", "http://test.test"), ("Test2", "http://test.test")'
+            'INSERT INTO restaurants (name, url) VALUES ("Test", "http://test.test"), ("Test2", "http://test2.test")'
         );
 
         $menus = [
@@ -63,9 +63,9 @@ class MenusDaoTest extends DailyMenuSlimTestCase
 
         $menus = $this->dao->getMenusBetweenDatesByRestaurants(new \DateTime('2019-09-17'), new \DateTime('2019-09-18'));
         $this->assertCount(2, $menus);
-        $this->assertEquals(2, $menus['Test2'][0]->getRestaurantId());
-        $this->assertEquals(1, $menus['Test'][0]->getRestaurantId());
-        $this->assertEquals(1, $menus['Test'][1]->getRestaurantId());
-        $this->assertEquals(['D Food', 'D Food 2'], $menus['Test'][1]->getFoods());
+        $this->assertEquals('http://test2.test', $menus['Test2'][0]['restaurant_url']);
+        $this->assertEquals('http://test.test', $menus['Test'][0]['restaurant_url']);
+        $this->assertEquals('http://test.test', $menus['Test'][1]['restaurant_url']);
+        $this->assertEquals(['D Food', 'D Food 2'], $menus['Test'][1]['foods']);
     }
 }

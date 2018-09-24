@@ -47,7 +47,7 @@ class MenusDao
     {
         $menus = [];
         $statement = $this->pdo->prepare(
-            'SELECT m.foods, m.price, m.date, r.id AS restaurant_id, r.name AS restaurant_name
+            'SELECT m.foods, m.price, m.date, r.name AS restaurant_name, r.url AS restaurant_url
             FROM menus m
             INNER JOIN restaurants r ON m.restaurant_id = r.id
             WHERE date BETWEEN :startDate AND :endDate'
@@ -57,11 +57,13 @@ class MenusDao
             'endDate' => $endDate->format('Y-m-d')
         ]);
         while($menuData = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $startDate = $menuData['date'];
             $foods = explode("\n", $menuData['foods']);
-            $price = $menuData['price'];
-            $menu = new Menu($menuData['restaurant_id'], $foods, $price, new DateTime($startDate));
-            $menus[$menuData['restaurant_name']][] = $menu;
+            $menus[$menuData['restaurant_name']][] = [
+                'foods' => $foods,
+                'price' => $menuData['price'],
+                'date' => $menuData['date'],
+                'restaurant_url' => $menuData['restaurant_url']
+            ];
         }
         return $menus;
     }
