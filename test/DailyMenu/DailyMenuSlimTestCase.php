@@ -4,6 +4,8 @@ namespace Test\DailyMenu;
 
 use App\AppBuilder;
 use App\DailyMenu\ConfigProvider;
+use App\DailyMenu\Crawler\AbstractCrawler;
+use App\DailyMenu\Entity\Restaurant;
 use App\Skeleton\TestSuite\AppSlimTestCase;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
@@ -31,6 +33,12 @@ class DailyMenuSlimTestCase extends AppSlimTestCase
     {
         parent::addProvider($appBuilder);
         $appBuilder->addProvider(new ConfigProvider());
+    }
+
+    protected function createCrawler($class, $assetFile): AbstractCrawler {
+        $file = __DIR__ . '/Crawler/assets/' . $assetFile;
+        $clientMock = $this->createClientMock($file);
+        return new $class($clientMock, $this->getService('domCrawler'), new Restaurant('', '', 0));
     }
 
     protected function createClientMock(string $file) {

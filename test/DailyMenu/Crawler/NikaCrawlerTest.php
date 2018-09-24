@@ -3,18 +3,30 @@
 namespace Test\DailyMenu\Crawler;
 
 use App\DailyMenu\Crawler\NikaCrawler;
-use App\DailyMenu\Entity\Restaurant;
 use DateTime;
 use Test\DailyMenu\DailyMenuSlimTestCase;
 
 class NikaCrawlerTest extends DailyMenuSlimTestCase
 {
     /**
+     * @var NikaCrawler
+     */
+    private $crawler;
+
+    protected function setUp()
+    {
+        $this->crawler = $this->createCrawler(
+            NikaCrawler::class,
+            'nika_daily_menu_18_09_24-25.html'
+        );
+    }
+
+    /**
      * @test
      */
     public function getDailyMenu_GivenTodayDateTimeParameter_ReturnsCurrentDailyMenu()
     {
-        $menu = $this->createCrawler()->getDailyMenu(new \DateTime('2018-09-24'));
+        $menu = $this->crawler->getDailyMenu(new \DateTime('2018-09-24'));
 
         $this->assertEquals([
             'Bableves',
@@ -30,7 +42,7 @@ class NikaCrawlerTest extends DailyMenuSlimTestCase
      */
     public function getDailyMenu_GivenTomorrowDateTimeParameter_ReturnsCurrentDailyMenu()
     {
-        $menu = $this->createCrawler()->getDailyMenu(new \DateTime('2018-09-25'));
+        $menu = $this->crawler->getDailyMenu(new \DateTime('2018-09-25'));
 
         $this->assertEquals([
             'tervezés alatt',
@@ -47,13 +59,7 @@ class NikaCrawlerTest extends DailyMenuSlimTestCase
     public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->createCrawler()->getDailyMenu(new DateTime('2018-09-23'));
-    }
-
-    private function createCrawler($assetFile = 'nika_daily_menu_18_09_24-25.html') {
-        $file = __DIR__ . '/assets/' . $assetFile;
-        $clientMock = $this->createClientMock($file);
-        return new NikaCrawler($clientMock, $this->getService('domCrawler'), new Restaurant('Nika', '', 1));
+        $this->crawler->getDailyMenu(new DateTime('2018-09-23'));
     }
 
 }

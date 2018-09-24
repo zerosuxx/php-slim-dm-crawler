@@ -4,18 +4,28 @@ namespace Test\DailyMenu\Crawler;
 
 use App\DailyMenu\Crawler\KajaHuCrawler;
 use App\DailyMenu\Entity\Menu;
-use App\DailyMenu\Entity\Restaurant;
 use DateTime;
 use Test\DailyMenu\DailyMenuSlimTestCase;
 
 class KajaHuCrawlerTest extends DailyMenuSlimTestCase
 {
+
+    /**
+     * @var KajaHuCrawler
+     */
+    private $crawler;
+
+    protected function setUp()
+    {
+        $this->crawler = $this->createCrawler(KajaHuCrawler::class, 'kajahu_daily_menu_18_09_20.json');
+    }
+
     /**
      * @test
      */
     public function getDailyMenu_ReturnsCurrentDailyMenu()
     {
-        $menu = $this->createCrawler()->getDailyMenu(new DateTime('2018-09-20'));
+        $menu = $this->crawler->getDailyMenu(new DateTime('2018-09-20'));
         $this->assertInstanceOf(Menu::class, $menu);
         $this->assertEquals([
             'Francia hagymaleves',
@@ -30,15 +40,6 @@ class KajaHuCrawlerTest extends DailyMenuSlimTestCase
     public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->createCrawler()->getDailyMenu(new DateTime('2018-09-25'));
+        $this->crawler->getDailyMenu(new DateTime('2018-09-25'));
     }
-
-
-    private function createCrawler($assetFile = 'kajahu_daily_menu_18_09_20.json') {
-        $file = __DIR__ . '/assets/' . $assetFile;
-        $clientMock = $this->createClientMock($file);
-        return new KajaHuCrawler($clientMock, $this->getService('domCrawler'), new Restaurant('Kajahu', '', 1));
-    }
-
-
 }
