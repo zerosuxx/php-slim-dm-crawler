@@ -6,7 +6,7 @@ use App\DailyMenu\Crawler\MuzikumCrawler;
 use DateTime;
 use Test\DailyMenu\DailyMenuSlimTestCase;
 
-class VendiakCrawlerTest extends DailyMenuSlimTestCase
+class MuzikumCrawlerTest extends DailyMenuSlimTestCase
 {
     /**
      * @test
