@@ -48,7 +48,7 @@ class DailyMenusAction
         foreach ($menusByRestaurants as $restaurant => $menus) {
             /* @var $menus Menu[] */
             foreach($menus as $menu) {
-                $date = $menu->getDate()->format('Y-m-d');
+                $date = $menu['date'];
                 $menusByDates[$date][$restaurant] = $menu;
             }
         }

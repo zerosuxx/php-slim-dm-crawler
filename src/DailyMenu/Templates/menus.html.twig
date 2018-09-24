@@ -12,9 +12,9 @@
             <tr><td colspan="3"><h3>{{ date }}</h3></td></tr>
             {% for restaurant_name,menu in menus_by_restaurants %}
                 <tr>
-                    <td><h4>{{ restaurant_name }}</h4></td>
-                    <td><ul><li>{{ menu.getFoods()|join("</li><li>")|raw }}</li></ul></td>
-                    <td>{{ menu.getPrice() }} Ft</td>
+                    <td><h4><a href="{{ menu.restaurant_url }}" target="_blank">{{ restaurant_name }}</a></h4></td>
+                    <td><ul><li>{{ menu.foods|join("</li><li>")|raw }}</li></ul></td>
+                    <td>{{ menu.price }} Ft</td>
                 </tr>
             {% endfor %}
         {% endfor %}
