@@ -18,15 +18,15 @@ class RestarauntsSeeder extends AbstractSeed
         $records = [
             [
                 'name' => 'Bonnie',
-                'url' => 'http://bonnierestro.hu/hu/napimenu/'
+                'url' => 'http://bonnierestro.hu'
             ],
             [
                 'name' => 'KajaHu',
-                'url' => 'https://appif.kajahu.com/jdmenu?jseat=-&jlang=hu'
+                'url' => 'https://www.kajahu.com/'
             ],
             [
                 'name' => 'Nika',
-                'url' => 'https://iphone.facebook.com/nikadelimenu/posts/?ref=page_internal&mt_nav=0'
+                'url' => 'http://www.nikarestaurant.hu/'
             ],
             [
                 'name' => 'Véndiák',
@@ -34,7 +34,7 @@ class RestarauntsSeeder extends AbstractSeed
             ],
             [
                 'name' => 'Muzikum',
-                'url' => 'http://muzikum.hu/heti-menu/'
+                'url' => 'http://muzikum.hu'
             ]
         ];
         $table = $this->table('restaurants');
