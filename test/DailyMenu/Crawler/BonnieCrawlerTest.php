@@ -28,7 +28,8 @@ class BonnieCrawlerTest extends DailyMenuSlimTestCase
         $menu = $this->createBonnieCrawler()->getDailyMenu(new DateTime('2018-09-24'));
         $this->assertInstanceOf(Menu::class, $menu);
         $this->assertEquals([
-            'Májgaluskaleves', 'Roston csirkemell paradicsommal, mozzarellával és párolt rizzsel'
+            'Májgaluskaleves',
+            'Roston csirkemell paradicsommal, mozzarellával és párolt rizzsel'
         ], $menu->getFoods());
         $this->assertEquals(1350, $menu->getPrice());
     }
@@ -36,12 +37,27 @@ class BonnieCrawlerTest extends DailyMenuSlimTestCase
     /**
      * @test
      */
-    public function getDailyMenu_WithEdgeDateFormatGivenLeftDateTimeParameter_ReturnsCurrentDailyMenu()
+    public function getDailyMenu_WithEdgeDateFormatGivenCurrentMonthParameter_ReturnsCurrentDailyMenu()
     {
         $menu = $this->createBonnieCrawler('bonnie_daily_menu_18_02_26-03_09.html')->getDailyMenu(new DateTime('2018-02-26'));
         $this->assertInstanceOf(Menu::class, $menu);
         $this->assertEquals([
-            'Pedro zöldséglevese', 'Áfonyalekvárral és camemberttel sült csirkemell hasábburgonyával'
+            'Pedro zöldséglevese',
+            'Áfonyalekvárral és camemberttel sült csirkemell hasábburgonyával'
+        ], $menu->getFoods());
+        $this->assertEquals(1350, $menu->getPrice());
+    }
+
+    /**
+     * @test
+     */
+    public function getDailyMenu_WithEdgeDateFormatGivenNextMonthParameter_ReturnsCurrentDailyMenu2()
+    {
+        $menu = $this->createBonnieCrawler('bonnie_daily_menu_18_02_26-03_09.html')->getDailyMenu(new DateTime('2018-03-01'));
+        $this->assertInstanceOf(Menu::class, $menu);
+        $this->assertEquals([
+            'Tárkonyos csirkeraguleves',
+            'Aszalt paradicsommal töltött sertéskaraj, vajas-petrezselymes burgonyával'
         ], $menu->getFoods());
         $this->assertEquals(1350, $menu->getPrice());
     }
@@ -58,6 +74,5 @@ class BonnieCrawlerTest extends DailyMenuSlimTestCase
     private function createBonnieCrawler($assetFile = 'bonnie_daily_menu_18_09_17-21.html') {
         return $this->createCrawler(BonnieCrawler::class, $assetFile);
     }
-
 
 }

@@ -73,6 +73,10 @@ class BonnieCrawler extends AbstractCrawler
      */
     private function isInDateInterval(int $day, array $days): bool
     {
-        return $days[1] <= $day && ($days[2] >= $day || $days[1] > $days[2]);
+        if($days[1] > $days[2]) {
+            return $days[1] <= $day || $days[2] >= $day;
+        }
+
+        return $days[1] <= $day && $days[2] >= $day;
     }
 }
