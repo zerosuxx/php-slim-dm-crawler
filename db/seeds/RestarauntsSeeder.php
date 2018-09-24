@@ -23,6 +23,10 @@ class RestarauntsSeeder extends AbstractSeed
             [
                 'name' => 'KajaHu',
                 'url' => 'https://appif.kajahu.com/jdmenu?jseat=-&jlang=hu'
+            ],
+            [
+                'name' => 'Nika',
+                'url' => 'https://iphone.facebook.com/nikadelimenu/posts/?ref=page_internal&mt_nav=0'
             ]
         ];
         $table = $this->table('restaurants');
