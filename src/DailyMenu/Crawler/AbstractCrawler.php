@@ -47,7 +47,10 @@ abstract class AbstractCrawler
      */
     abstract protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu;
 
-    abstract protected function getUrl();
+    /**
+     * @return string
+     */
+    abstract protected function getUrl(): string;
 
     /**
      * @param DateTime|null $date [optional]
