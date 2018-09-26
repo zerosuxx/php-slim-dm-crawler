@@ -29,9 +29,7 @@ class ConfigProvider
 
     public function loadRoutes(App $app)
     {
-        $app->get('/menus', DailyMenusAction::class);
-        $app->get('/menus/{startDate}', DailyMenusAction::class);
-        $app->get('/menus/{startDate}/{endDate}', DailyMenusAction::class);
+        $app->get('/', DailyMenusAction::class);
     }
 
     public function loadDependencies(ContainerInterface $container)
