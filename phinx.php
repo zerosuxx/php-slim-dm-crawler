@@ -28,6 +28,15 @@ return
             'pass' => 'root',
             'port' => '3306',
             'charset' => 'utf8',
+        ],
+        'production' => [
+            'adapter' => 'mysql',
+            'host' => getenv('DB_HOST'),
+            'name' => getenv('DB_NAME'),
+            'user' => getenv('DB_USER'),
+            'pass' => getenv('DB_PASS'),
+            'port' => getenv('DB_PORT') ?: '3306',
+            'charset' => 'utf8',
         ]
     ],
     'version_order' => 'creation'
