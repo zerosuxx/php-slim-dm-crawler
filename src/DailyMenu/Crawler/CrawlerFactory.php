@@ -49,10 +49,10 @@ class CrawlerFactory
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return AbstractCrawler
      */
-    public function getCrawlerFromRestaurantName($name): AbstractCrawler
+    public function getCrawlerFromRestaurantName(string $name): AbstractCrawler
     {
         $crawlerClass = $this->getCrawlerClass($name);
         $restaurant = $this->dao->getRestaurant($name);
