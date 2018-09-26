@@ -5,6 +5,7 @@ namespace App\Skeleton\TestSuite;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Container;
 use Slim\Http\Environment;
@@ -91,12 +92,20 @@ abstract class AbstractSlimTestCase extends TestCase
     }
 
     /**
+     * @return ContainerInterface
+     */
+    protected function getContainer(): ContainerInterface
+    {
+        return $this->getApp()->getContainer();
+    }
+
+    /**
      * @param string $name
      * @return mixed
      */
     protected function getService($name)
     {
-        return $this->getApp()->getContainer()->get($name);
+        return $this->getContainer()->get($name);
     }
 
     /**
