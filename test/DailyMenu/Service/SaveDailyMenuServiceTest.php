@@ -9,6 +9,7 @@ use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use App\DailyMenu\Service\SaveDailyMenusService;
+use Psr\Log\LoggerInterface;
 use Test\DailyMenu\DailyMenuSlimTestCase;
 
 /**
@@ -17,6 +18,7 @@ use Test\DailyMenu\DailyMenuSlimTestCase;
  */
 class SaveDailyMenuServiceTest extends DailyMenuSlimTestCase
 {
+
     /**
      * @test
      */
@@ -49,15 +51,13 @@ class SaveDailyMenuServiceTest extends DailyMenuSlimTestCase
             ->method('getCrawlerFromRestaurantName')
             ->willReturn($bonnieCrawlerMock);
 
-        $logger = function() {
-
-        };
+        $loggerMock = $this->createMock(LoggerInterface::class);
 
         $service = new SaveDailyMenusService(
             $restaurantsDaoMock,
             $this->getService(MenusDao::class),
             $crawlerFactoryMock,
-            $logger
+            $loggerMock
         );
 
         $service->saveDailyMenus($dateTime);
@@ -80,8 +80,7 @@ class SaveDailyMenuServiceTest extends DailyMenuSlimTestCase
             ->expects($this->once())
             ->method('getDailyRestaurants')
             ->willReturn([
-                new Restaurant('Bonnie', '', 1),
-                new Restaurant('Test', '', 2)
+                new Restaurant('Bonnie', '', 1)
             ]);
 
         $crawlerFactoryMock = $this->createMock(CrawlerFactory::class);
@@ -90,15 +89,16 @@ class SaveDailyMenuServiceTest extends DailyMenuSlimTestCase
             ->method('getCrawlerFromRestaurantName')
             ->willThrowException(new \PDOException());
 
-        $logger = function($file, $exception) {
-            $this->assertNotEmpty($file);
-            $this->assertInstanceOf(\PDOException::class, $exception);
-        };
+        $loggerMock = $this->createMock(LoggerInterface::class);
+        $loggerMock
+            ->expects($this->once())
+            ->method('error');
+
         $service = new SaveDailyMenusService(
             $restaurantsDaoMock,
             $this->getService(MenusDao::class),
             $crawlerFactoryMock,
-            $logger
+            $loggerMock
         );
         $service->saveDailyMenus(new \DateTime());
     }
