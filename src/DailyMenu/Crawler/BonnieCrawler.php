@@ -5,7 +5,6 @@ namespace App\DailyMenu\Crawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
-use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -17,23 +16,12 @@ class BonnieCrawler extends AbstractCrawler
 
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
-        $dayOfWeek = $date->format('N');
-        $day = $date->format('d');
-
-        $column = $this->getColumn($domCrawler, $day);
-
-        $dailyMenu = $domCrawler->filter('#'.$column.'_column table')->eq($dayOfWeek-1);
-
-        $foods = $this->getFoods($dailyMenu);
-
-        $title = $domCrawler->filter('h2')->text();
-        preg_match('/([0-9]+)/', $title, $titleMatches);
-        $price = (int)$titleMatches[1];
-
+        $foods = $this->getFoods($domCrawler, $date);
+        $price = $this->gerPrice($domCrawler);
         return new Menu($restaurant->getId(), $foods, $price, $date);
     }
 
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return 'http://bonnierestro.hu/hu/napimenu/';
     }
@@ -57,17 +45,25 @@ class BonnieCrawler extends AbstractCrawler
                 return $column;
             }
         }
-        throw new InvalidArgumentException('Daily menu not found for this date');
+        throw new CrawlerException('Daily menu not found for this date');
     }
 
     /**
-     * @param $domCrawler
+     * @param Crawler $domCrawler
+     * @param DateTime $date
      * @return array
      */
-    private function getFoods(Crawler $domCrawler): array
+    private function getFoods(Crawler $domCrawler, DateTime $date): array
     {
-        $soup = trim($domCrawler->filter('tr:nth-child(2) td:nth-child(3)')->text());
-        $mainCourse = trim($domCrawler->filter('tr:nth-child(3) td:nth-child(3)')->text());
+        $dayOfWeek = $date->format('N');
+        $day = $date->format('d');
+
+        $column = $this->getColumn($domCrawler, $day);
+
+        $menuElement = $domCrawler->filter('#'.$column.'_column table')->eq($dayOfWeek-1);
+
+        $soup = trim($menuElement->filter('tr:nth-child(2) td:nth-child(3)')->text());
+        $mainCourse = trim($menuElement->filter('tr:nth-child(3) td:nth-child(3)')->text());
         return [$soup, $mainCourse];
     }
 
@@ -83,5 +79,18 @@ class BonnieCrawler extends AbstractCrawler
         }
 
         return $days[1] <= $day && $days[2] >= $day;
+    }
+
+    /**
+     * @param Crawler $domCrawler
+     * @return int
+     */
+    private function gerPrice(Crawler $domCrawler): int
+    {
+        $title = $domCrawler->filter('h2')->text();
+        $titleMatches = [];
+        preg_match('/([0-9]+)/', $title, $titleMatches);
+        $price = (int)$titleMatches[1];
+        return $price;
     }
 }

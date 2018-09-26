@@ -22,17 +22,15 @@ class VendiakCrawler extends AbstractCrawler
      */
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
-        $menuContent = $domCrawler->filter('.offer-item')->eq(0)->html();
-        $menuData = explode('<br>', $menuContent);
+        $menuData = $this->getMenuData($date, $domCrawler);
 
         if(count($menuData) < 2) {
-            throw new \InvalidArgumentException('Daily menu not found for this date');
+            throw new CrawlerException('Daily menu not found for this date');
         }
 
         $cleanedData = $this->formatMenuData($menuData);
-        $lastIndex = count($cleanedData) - 1;
-        $price = filter_var($cleanedData[$lastIndex], FILTER_SANITIZE_NUMBER_INT);
-        $foods = array_slice($cleanedData, 0, -1);
+        $price = $this->getPrice($cleanedData);
+        $foods = $this->getFoods($cleanedData);
 
         return new Menu($restaurant->getId(), $foods, $price, $date);
     }
@@ -40,7 +38,7 @@ class VendiakCrawler extends AbstractCrawler
     /**
      * @return string
      */
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return 'http://www.vendiaketterem.hu/';
     }
@@ -56,5 +54,38 @@ class VendiakCrawler extends AbstractCrawler
         return array_values($filteredValues);
     }
 
+    /**
+     * @param $menuData
+     * @return int
+     */
+    private function getPrice(array $menuData): int
+    {
+        $lastIndex = count($menuData) - 1;
+        $price = filter_var($menuData[$lastIndex], FILTER_SANITIZE_NUMBER_INT);
+        return (int)$price;
+    }
+
+    /**
+     * @param $menuData
+     * @return array
+     */
+    protected function getFoods(array $menuData): array
+    {
+        return array_slice($menuData, 0, -1);
+    }
+
+    /**
+     * @param DateTime $date
+     * @param Crawler $domCrawler
+     * @return array
+     */
+    private function getMenuData(DateTime $date, Crawler $domCrawler): array
+    {
+        $dayOfWeek = $date->format('N');
+        $menuElement = $domCrawler->filter('.offer-item')->eq($dayOfWeek);
+        $menuContent = $menuElement->count() ? $menuElement->text() : '';
+        $menuData = explode("\n", $menuContent);
+        return $menuData;
+    }
 
 }

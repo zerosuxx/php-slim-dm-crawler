@@ -5,7 +5,6 @@ namespace App\DailyMenu\Crawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
-use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -16,19 +15,13 @@ class MuzikumCrawler extends AbstractCrawler
 {
     protected function createMenu(Restaurant $restaurant, DateTime $date, Crawler $domCrawler): Menu
     {
-        $dayOfWeek = $date->format('N');
-        $menuContent = $domCrawler->filter('.content-right div p')->eq($dayOfWeek-1)->html();
-
-        $menuData = explode('<br>', $menuContent);
+        $menuData = $this->getMenuData($date, $domCrawler);
 
         if(count($menuData) < 2) {
-            throw new InvalidArgumentException('Daily menu not found for this date');
+            throw new CrawlerException('Daily menu not found for this date');
         }
 
         $foods = $this->filterMenuData($menuData);
-
-        $priceMatches = [];
-        preg_match('/A menü ára ([0-9]+)/', $domCrawler->text(), $priceMatches);
 
         return new Menu($restaurant->getId(), $foods, $this->getPrice($domCrawler), $date);
     }
@@ -36,7 +29,7 @@ class MuzikumCrawler extends AbstractCrawler
     /**
      * @return string
      */
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return 'http://muzikum.hu/heti-menu/';
     }
@@ -51,5 +44,22 @@ class MuzikumCrawler extends AbstractCrawler
     private function filterMenuData(array $menuData)
     {
         return array_map('trim', $menuData);
+    }
+
+    /**
+     * @param DateTime $date
+     * @param Crawler $domCrawler
+     * @return array
+     */
+    private function getMenuData(DateTime $date, Crawler $domCrawler): array
+    {
+        $dayOfWeek = $date->format('N');
+
+        $menuCrawler = $domCrawler->filter('.content-right div')->eq($dayOfWeek - 1)->filter('p');
+
+        $menuContent = $menuCrawler->count() ? $menuCrawler->text() : '';
+
+        $menuData = explode("\n", $menuContent);
+        return $menuData;
     }
 }

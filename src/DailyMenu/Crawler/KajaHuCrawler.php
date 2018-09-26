@@ -26,16 +26,17 @@ class KajaHuCrawler extends AbstractCrawler
         foreach($data->jdata as $menu) {
             if($menu->ddate === $dateString) {
                 $price = filter_var($menu->price, FILTER_SANITIZE_NUMBER_INT);
-                return new Menu($restaurant->getId(), [$menu->line1, $menu->line2, $menu->line3], $price, $date);
+                $foods = [$menu->line1, $menu->line2, $menu->line3];
+                return new Menu($restaurant->getId(), $foods, $price, $date);
             }
         }
-        throw new \InvalidArgumentException('Daily menu not found for this date');
+        throw new CrawlerException('Daily menu not found for this date');
     }
 
     /**
      * @return string
      */
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return 'https://appif.kajahu.com/jdmenu?jseat=-&jlang=hu';
     }

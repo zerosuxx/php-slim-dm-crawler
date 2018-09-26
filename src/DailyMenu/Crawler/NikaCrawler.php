@@ -5,7 +5,7 @@ namespace App\DailyMenu\Crawler;
 use App\DailyMenu\Entity\Menu;
 use App\DailyMenu\Entity\Restaurant;
 use DateTime;
-use InvalidArgumentException;
+use DOMElement;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -34,7 +34,7 @@ class NikaCrawler extends AbstractCrawler
     /**
      * @return string
      */
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return 'https://iphone.facebook.com/nikadelimenu/posts/?ref=page_internal&mt_nav=0';
     }
@@ -63,7 +63,7 @@ class NikaCrawler extends AbstractCrawler
     }
 
     /**
-     * @param \DOMElement[] $menuData
+     * @param DOMElement[] $menuData
      * @return array
      */
     private function getFoods(array $menuData)
@@ -76,10 +76,10 @@ class NikaCrawler extends AbstractCrawler
 
     /**
      * @param DateTime $date
-     * @param $postElement
+     * @param DOMElement $postElement
      * @return int
      */
-    private function getDayNum(DateTime $date, \DOMElement $postElement): ?int
+    private function getDayNum(DateTime $date, DOMElement $postElement): ?int
     {
         $dayNum = null;
         if (strpos($postElement->textContent, $date->format('Y.m.d')) !== false) {
@@ -94,7 +94,7 @@ class NikaCrawler extends AbstractCrawler
      * @param DateTime $date
      * @param Crawler $domCrawler
      * @return array
-     * @throws InvalidArgumentException
+     * @throws CrawlerException
      */
     private function getPostAndDayNum(Crawler $domCrawler, DateTime $date): array
     {
@@ -106,6 +106,6 @@ class NikaCrawler extends AbstractCrawler
                 return [$posts->eq($index), $dayNum];
             }
         }
-        throw new InvalidArgumentException('Daily menu not found for this date');
+        throw new CrawlerException('Daily menu not found for this date');
     }
 }

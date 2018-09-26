@@ -2,6 +2,7 @@
 
 namespace Test\DailyMenu\Crawler;
 
+use App\DailyMenu\Crawler\CrawlerException;
 use App\DailyMenu\Crawler\KajaHuCrawler;
 use App\DailyMenu\Entity\Menu;
 use DateTime;
@@ -39,7 +40,7 @@ class KajaHuCrawlerTest extends DailyMenuSlimTestCase
      */
     public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(CrawlerException::class);
         $this->crawler->getDailyMenu(new DateTime('2018-09-25'));
     }
 }

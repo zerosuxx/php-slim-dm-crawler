@@ -3,6 +3,7 @@
 namespace Test\DailyMenu\Crawler;
 
 use App\DailyMenu\Crawler\BonnieCrawler;
+use App\DailyMenu\Crawler\CrawlerException;
 use App\DailyMenu\Entity\Menu;
 use DateTime;
 use Test\DailyMenu\DailyMenuSlimTestCase;
@@ -67,7 +68,7 @@ class BonnieCrawlerTest extends DailyMenuSlimTestCase
      */
     public function getDailyMenu_GivenInvalidDateTimeParameter_ThrowsException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(CrawlerException::class);
         $this->createBonnieCrawler()->getDailyMenu(new DateTime('2018-09-22'));
     }
 
