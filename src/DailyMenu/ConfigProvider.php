@@ -7,7 +7,7 @@ use App\DailyMenu\Crawler\CrawlerFactory;
 use App\DailyMenu\Dao\MenusDao;
 use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Service\SaveDailyMenusService;
-use Exception;
+use App\Skeleton\Log\FileLogger;
 use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
 use Slim\App;
@@ -45,16 +45,8 @@ class ConfigProvider
         };
 
         $container['errorLogger'] = function (ContainerInterface $container) {
-            return function($file, Exception $exception) use($container) {
-                $logDir = $container['rootDir'] . '/logs';
-                if(!file_exists($logDir)) {
-                    mkdir($logDir, 0777, true);
-                }
-                $errorMessage = '[' . date('Y-m-d H:i:s') . '] ' . get_class($exception) . ': ' . $exception->getMessage() . "\n"
-                . '## ' . $exception->getFile() . '('.$exception->getLine().')' . "\n"
-                . $exception->getTraceAsString() . "\n";
-                error_log($errorMessage, 3, $logDir . '/dailymenu_' . $file . '.log');
-            };
+            $logDir = $container['rootDir'] . '/logs';
+            return new FileLogger($logDir, 'daily_menu_app_error');
         };
 
         $container['twig'] = function (ContainerInterface $container) {
