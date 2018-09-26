@@ -30,7 +30,7 @@ phpunit: ## SSH into test web server container and run tests
 mysql: ## Opens mysql cli
 	docker-compose exec mysql mysql -u app -papp
 
-composer-install: ## Runs composer install for sample_project
+composer-install: ## Runs composer install
 	docker-compose run test /bin/bash -l -c "composer install && vendor/bin/phinx migrate -e development -e testing"
 
 migrate-dbs: ## Migrates databases
@@ -39,7 +39,13 @@ migrate-dbs: ## Migrates databases
 seed-dbs: ## Migrates databases
 	docker-compose exec web /bin/bash -l -c "php vendor/bin/phinx seed:run -e development && php vendor/bin/phinx seed:run -e testing"
 
-install: destroy build up composer-install migrate-dbs seed-dbs
+init: ## Init
+	(docker network create app-net || true) && (mkdir -m 777 logs || true)
 
 init-test: ## Init for testing
-	(docker network create app-net || true) && docker-compose pull mysql && docker-compose pull test && docker-compose up -d mysql && make composer-install
+	make init && docker-compose pull mysql && docker-compose pull test && docker-compose up -d mysql && make composer-install
+
+create-dirs: ## Create dirs
+	mkdir -m 777 logs
+
+install: create-dirs destroy build up composer-install migrate-dbs seed-dbs
