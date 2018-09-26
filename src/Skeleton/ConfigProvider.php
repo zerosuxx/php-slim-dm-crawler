@@ -22,7 +22,7 @@ class ConfigProvider extends AbstractConfigProvider
 
         $container['pdo'] = function () {
             $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', getenv('DB_HOST'), getenv('DB_NAME'));
-            $pdo = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASSWORD'));
+            $pdo = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASS'));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->exec('SET sql_mode=""');
             return $pdo;
