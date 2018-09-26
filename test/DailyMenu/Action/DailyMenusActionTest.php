@@ -18,7 +18,7 @@ class DailyMenusActionTest extends DailyMenuSlimTestCase
      */
     public function callsMenusPage_WithoutDate_Returns200WithContents()
     {
-        $response = $this->runApp('GET', '/menus');
+        $response = $this->runApp('GET', '/');
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -34,7 +34,7 @@ class DailyMenusActionTest extends DailyMenuSlimTestCase
         $this->getPDO()->query(
             'INSERT INTO menus (restaurant_id, foods, price, date) VALUES (1, "test food", 1000, "2018-09-17")'
         );
-        $response = $this->runApp('GET', '/menus?start_date=2018-09-17');
+        $response = $this->runApp('GET', '/?start_date=2018-09-17');
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains('Test Restaurant', (string)$response->getBody());
         $this->assertContains('test food', (string)$response->getBody());
@@ -52,7 +52,7 @@ class DailyMenusActionTest extends DailyMenuSlimTestCase
         $this->getPDO()->query(
             'INSERT INTO menus (restaurant_id, foods, price, date) VALUES (1, "test food", 1000, "2018-09-17"), (2, "test food 2", 2000, "2018-09-18")'
         );
-        $response = $this->runApp('GET', '/menus?start_date=2018-09-17&end_date=2018-09-18');
+        $response = $this->runApp('GET', '/?start_date=2018-09-17&end_date=2018-09-18');
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains('Test Restaurant', (string)$response->getBody());
         $this->assertContains('test food', (string)$response->getBody());
