@@ -8,6 +8,7 @@ use App\DailyMenu\Dao\RestaurantsDao;
 use DateTime;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * Class SaveDailyMenuService
@@ -56,17 +57,24 @@ class SaveDailyMenusService
     public function saveDailyMenus(DateTime $date)
     {
         $restaurants = $this->restaurantsDao->getDailyRestaurants($date);
+        $logText = '';
         foreach($restaurants as $restaurant) {
             try {
                 $crawler = $this->crawlerFactory->getCrawlerFromRestaurantName($restaurant->getName());
                 $menu = $crawler->getDailyMenu($date);
                 $this->menusDao->save($menu);
-            } catch (\Throwable|GuzzleException $exception) {
+                $logText .= $restaurant->getName() . "\n"
+                    . implode("\n", $menu->getFoods())
+                    . "\n" . $menu->getPrice() . 'Ft';
+            } catch (Throwable|GuzzleException $exception) {
                 $this->logger->error('[{date}] {exception}', [
                     'date' => date('Y-m-d H:i:s'),
                     'exception' => $exception
                 ]);
             }
+        }
+        if($logText) {
+            $this->logger->info($logText);
         }
     }
 }
