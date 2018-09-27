@@ -16,10 +16,13 @@ class ConfigProviderTest extends DailyMenuSlimTestCase
     public function loadDependencies_GivenContainer_SetDependenciesIntoContainer()
     {
         $container = $this->getContainer();
-        $container['rootDir'] = sys_get_temp_dir();
         $configProvider = new ConfigProvider();
         $configProvider->loadDependencies($container);
-        $this->assertInstanceOf(LoggerInterface::class, $container->get('errorLogger'));
+
+        $env = getenv('APPLICATION_ENV');
+        putenv('APPLICATION_ENV=prod');
+        $this->assertInstanceOf(LoggerInterface::class, $container->get('logger'));
+        putenv('APPLICATION_ENV=' . $env);
         $this->assertInstanceOf(CrawlerFactory::class, $container->get(CrawlerFactory::class));
         $this->assertInstanceOf(SaveDailyMenusService::class, $container->get(SaveDailyMenusService::class));
     }

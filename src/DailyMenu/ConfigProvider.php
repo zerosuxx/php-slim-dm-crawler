@@ -7,8 +7,10 @@ use App\DailyMenu\Crawler\CrawlerFactory;
 use App\DailyMenu\Dao\MenusDao;
 use App\DailyMenu\Dao\RestaurantsDao;
 use App\DailyMenu\Service\SaveDailyMenusService;
-use App\Skeleton\Log\FileLogger;
 use GuzzleHttp\Client;
+use Monolog\Handler\SlackHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Views\Twig;
@@ -42,16 +44,28 @@ class ConfigProvider
             return new Crawler();
         };
 
-        $container['errorLogger'] = function (ContainerInterface $container) {
-            $logDir = $container['rootDir'] . '/logs';
-            return new FileLogger($logDir, 'daily_menu_app_error');
+        $container['logger'] = function () {
+            $logger = new Logger('AppLogger');
+            if(getenv('APPLICATION_ENV') === 'prod') {
+                $logger->pushHandler(new SlackHandler(
+                    getenv('SLACK_APP_TOKEN'),
+                    'daily-menus',
+                    'daily-menu-bot',
+                    true,
+                    null,
+                    Logger::INFO,
+                    true,
+                    true
+                ));
+            }
+            $logger->pushHandler(new StreamHandler('php://stderr', Logger::ERROR));
+            return $logger;
         };
 
         $container['twig'] = function (ContainerInterface $container) {
             $view = new Twig(__DIR__ . '/Templates', [
                 'cache' => false
             ]);
-
             $router = $container->get('router');
             $uri = $container->get('request')->getUri();
             $view->addExtension(new TwigExtension($router, $uri));
@@ -75,7 +89,7 @@ class ConfigProvider
                 $container->get(RestaurantsDao::class),
                 $container->get(MenusDao::class),
                 $container->get(CrawlerFactory::class),
-                $container->get('errorLogger')
+                $container->get('logger')
             );
         };
         $container[DailyMenusAction::class] = function (ContainerInterface $container) {
