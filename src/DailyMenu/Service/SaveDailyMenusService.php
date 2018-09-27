@@ -65,7 +65,7 @@ class SaveDailyMenusService
                 $this->menusDao->save($menu);
                 $logText .= $restaurant->getName() . "\n"
                     . implode("\n", $menu->getFoods())
-                    . "\n" . $menu->getPrice() . 'Ft';
+                    . "\n" . $menu->getPrice() . 'Ft' . "\n\n";
             } catch (Throwable|GuzzleException $exception) {
                 $this->logger->error('[{date}] {exception}', [
                     'date' => date('Y-m-d H:i:s'),
