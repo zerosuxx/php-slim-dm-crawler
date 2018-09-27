@@ -39,16 +39,13 @@ migrate-dbs: ## Migrates databases
 seed-dbs: ## Migrates databases
 	docker-compose exec web /bin/bash -l -c "php vendor/bin/phinx seed:run -e development && php vendor/bin/phinx seed:run -e testing"
 
-init: ## Init
-	(docker network create app-net || true) && (make create-dirs || true)
+init-docker: ## Init
+	(docker network create app-net || true)
 
 init-production: ## Init production
-	(make create-dirs || true) && vendor/bin/phinx migrate -e production && vendor/bin/phinx seed:run -e production && echo "Init Production Complete!"
+	vendor/bin/phinx migrate -e production && vendor/bin/phinx seed:run -e production && echo "Init Production Complete!"
 
 init-test: ## Init for testing
-	make init && docker-compose pull mysql && docker-compose pull test && docker-compose up -d mysql && make composer-install
+	make init-docker && docker-compose pull mysql && docker-compose pull test && docker-compose up -d mysql && make composer-install
 
-create-dirs: ## Create dirs
-	mkdir -m 777 logs
-
-install: create-dirs destroy build up composer-install migrate-dbs seed-dbs
+install: destroy build up composer-install migrate-dbs seed-dbs
