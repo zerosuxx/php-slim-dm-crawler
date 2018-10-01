@@ -25,6 +25,8 @@ class HealthCheckActionTest extends AppSlimTestCase
     {
         $this->disableSlimErrorHandler(false);
         putenv('DB_USER=""');
+        $container = $this->getContainer();
+        $container['settings']['displayErrorDetails'] = true;
         $response = $this->runApp('GET', '/healthcheck');
         $this->assertEquals(500, $response->getStatusCode());
     }
