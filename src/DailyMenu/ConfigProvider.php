@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Monolog\Handler\SlackHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Views\Twig;
@@ -59,6 +60,7 @@ class ConfigProvider
                 ));
             }
             $logger->pushHandler(new StreamHandler('php://stderr', Logger::ERROR));
+            $logger->pushProcessor(new PsrLogMessageProcessor());
             return $logger;
         };
 
