@@ -1,6 +1,6 @@
 # PHP Daily Menu Crawler
 
-https://app.codeship.com/projects/51eb5860-a781-0136-2134-3e86a6997c9d/status?branch=master
+[![Codeship Status for zerosuxx/php-slim-dm-crawler](https://app.codeship.com/projects/51eb5860-a781-0136-2134-3e86a6997c9d/status?branch=master)](https://app.codeship.com/projects/308232)
 [![Coverage Status](https://coveralls.io/repos/github/zerosuxx/php-slim-dm-crawler/badge.svg?branch=master)](https://coveralls.io/github/zerosuxx/php-slim-dm-crawler?branch=master)
 
 Daily menu
